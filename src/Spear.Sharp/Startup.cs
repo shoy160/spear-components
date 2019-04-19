@@ -26,6 +26,7 @@ namespace Spear.Sharp
 
         protected override void MapServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             base.MapServices(services);
         }
 

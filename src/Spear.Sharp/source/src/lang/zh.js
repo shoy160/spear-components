@@ -2,6 +2,7 @@ export default {
   route: {
     home: '首页',
     config: '配置中心',
+    register: '服务注册',
     job: '调度中心',
     dbdoc: '数据库文档'
   },

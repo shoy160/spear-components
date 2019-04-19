@@ -61,6 +61,21 @@ export const asyncRouterMap = [{
       icon: 'table'
     }
   }]
+},
+{
+  path: '/register',
+  component: Layout,
+  redirect: 'noredirect',
+  children: [{
+    path: 'index',
+    component: () =>
+        import('@/views/pages/register/index'),
+    name: 'Register',
+    meta: {
+      title: 'register',
+      icon: 'link'
+    }
+  }]
 }, {
   path: '/jobs',
   component: Layout,
