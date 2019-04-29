@@ -1,18 +1,17 @@
 ﻿using Acb.AutoMapper;
 using Acb.Core;
 using Acb.Core.Data;
-using Acb.Core.Domain;
 using Acb.Dapper;
 using Acb.Dapper.Domain;
+using Dapper;
+using Newtonsoft.Json;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Contracts.Dtos.Job;
 using Spear.Sharp.Contracts.Enums;
-using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Spear.Sharp.Business.Domain.Repositories
 {
@@ -46,7 +45,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
 
             sql += "ORDER BY [Group],[CreationTime] DESC";
             var sqlStr = Connection.FormatSql(sql.ToString());
-            return await Connection.PagedListAsync<TJob>(sqlStr, page, size, sql.Parameters());
+            using (var conn = GetConnection())
+            {
+                return await conn.PagedListAsync<TJob>(sqlStr, page, size, sql.Parameters());
+            }
         }
 
         /// <summary> 查询Http任务 </summary>
@@ -87,14 +89,14 @@ namespace Spear.Sharp.Business.Domain.Repositories
         public Task<int> InsertAsync(JobDto dto)
         {
             var job = dto.MapTo<TJob>();
-            return UnitOfWork.Trans(async () =>
+            return Transaction(async (conn, trans) =>
             {
-                var count = await Connection.InsertAsync(job, trans: Trans);
+                var count = await conn.InsertAsync(job, trans: trans);
                 switch (dto.Type)
                 {
                     case JobType.Http:
                         var detail = dto.Detail.MapTo<TJobHttp>();
-                        count += await Connection.InsertAsync(detail, trans: Trans);
+                        count += await conn.InsertAsync(detail, trans: trans);
                         break;
                 }
                 return count;
@@ -125,24 +127,24 @@ namespace Spear.Sharp.Business.Domain.Repositories
         public Task<int> UpdateAsync(JobDto dto)
         {
             var job = dto.MapTo<TJob>();
-            return UnitOfWork.Trans(async () =>
+            return Transaction(async (conn, trans) =>
             {
-                var count = await Connection.UpdateAsync(job,
+                var count = await conn.UpdateAsync(job,
                     new[]
                     {
                         nameof(TJob.Group), nameof(TJob.Name), nameof(TJob.Desc),
                         nameof(TJob.Type)
-                    }, Trans);
+                    }, trans);
                 switch (dto.Type)
                 {
                     case JobType.Http:
                         var detail = dto.Detail.MapTo<TJobHttp>();
-                        count += await Connection.UpdateAsync(detail,
+                        count += await conn.UpdateAsync(detail,
                             new[]
                             {
                                 nameof(TJobHttp.Url), nameof(TJobHttp.Method), nameof(TJobHttp.Data),
                                 nameof(TJobHttp.Header), nameof(TJobHttp.BodyType)
-                            }, Trans);
+                            }, trans);
                         break;
                 }
                 return count;
@@ -165,16 +167,15 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 删除任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public Task DeleteByIdAsync(Guid jobId)
+        public async Task DeleteByIdAsync(Guid jobId)
         {
-            UnitOfWork.Trans(() =>
+            await Transaction(async (conn, trans) =>
             {
-                Connection.Delete<TJob>(jobId, trans: Trans);
-                Connection.Delete<TJobHttp>(jobId, trans: Trans);
-                Connection.Delete<TJobTrigger>(jobId, "JobId", Trans);
-                Connection.Delete<TJobRecord>(jobId, "JobId", Trans);
+                await conn.DeleteAsync<TJob>(jobId, trans: trans);
+                await conn.DeleteAsync<TJobHttp>(jobId, trans: trans);
+                await conn.DeleteAsync<TJobTrigger>(jobId, "JobId", trans);
+                await conn.DeleteAsync<TJobRecord>(jobId, "JobId", trans);
             });
-            return Task.CompletedTask;
         }
     }
 }

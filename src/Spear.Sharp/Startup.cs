@@ -1,11 +1,11 @@
 ﻿using Acb.Core.Extensions;
-using Spear.Sharp.Contracts;
-using Spear.Sharp.Hubs;
 using Acb.WebApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Spear.Sharp.Contracts;
+using Spear.Sharp.Hubs;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -64,6 +64,11 @@ namespace Spear.Sharp
                 route.MapHub<JobHub>("/job_hub");
             });
             app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+            var provider = app.ApplicationServices;
+            provider.GetService<IApplicationLifetime>().ApplicationStopping.Register(async () =>
+            {
+                await provider.GetService<ISchedulerContract>().Stop();
+            });
             base.Configure(app, env);
         }
     }

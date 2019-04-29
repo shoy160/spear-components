@@ -1,6 +1,7 @@
 ﻿using Acb.Core.Helper.Http;
-using Spear.Sharp.Contracts.Dtos.Job;
 using Newtonsoft.Json;
+using Spear.Sharp.Contracts.Dtos.Job;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -38,6 +39,7 @@ namespace Spear.Sharp.Business.Scheduler
             var req = new HttpRequest(data.Url)
             {
                 BodyType = (HttpBodyType)data.BodyType,
+
                 Headers = new Dictionary<string, string>
                 {
                     {"Request-By", "spear"}
@@ -49,7 +51,16 @@ namespace Spear.Sharp.Business.Scheduler
             {
                 foreach (var header in data.Header)
                 {
-                    req.Headers.Add(header.Key, header.Value);
+                    try
+                    {
+                        if (req.Headers.ContainsKey(header.Key))
+                            continue;
+                        req.Headers.Add(header.Key, header.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn(ex.Message);
+                    }
                 }
             }
             var resp = await HttpHelper.Instance.RequestAsync(GetHttpMethod(data.Method), req);

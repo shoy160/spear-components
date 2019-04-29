@@ -2,12 +2,11 @@
 using Acb.Core.Data;
 using Acb.Dapper;
 using Acb.Dapper.Domain;
+using Dapper;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Contracts.Dtos.Job;
-using Dapper;
 using System;
 using System.Threading.Tasks;
-using Acb.Core.Domain;
 
 namespace Spear.Sharp.Business.Domain.Repositories
 {
@@ -28,7 +27,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
             }
 
             sql += "ORDER BY [StartTime] DESC";
-            return await sql.PagedListAsync<JobRecordDto>(Connection, page, size, new { jobId, triggerId });
+            using (var conn = GetConnection())
+            {
+                return await sql.PagedListAsync<JobRecordDto>(conn, page, size, new { jobId, triggerId });
+            }
         }
 
         /// <summary> 添加任务日志 </summary>
@@ -40,11 +42,11 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 "UPDATE [t_job_trigger] SET [PrevTime]=@start WHERE [Id] = @id;" +
                 "UPDATE [t_job_trigger] SET [Times]=[Times]-1 WHERE [Id] = @id AND [Type]=2 AND [Times]>0;";
             var fmtSql = Connection.FormatSql(sql);
-            return UnitOfWork.Trans(async () =>
+            return Transaction(async (conn, trans) =>
             {
-                var count = await Connection.ExecuteAsync(fmtSql, new { id = record.TriggerId, start = record.StartTime },
-                    Trans);
-                count += await Connection.InsertAsync(record, trans: Trans);
+                var count = await conn.ExecuteAsync(fmtSql, new { id = record.TriggerId, start = record.StartTime },
+                    trans);
+                count += await conn.InsertAsync(record, trans: trans);
                 return count;
             });
         }

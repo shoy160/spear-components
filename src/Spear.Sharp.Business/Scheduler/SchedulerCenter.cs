@@ -1,12 +1,12 @@
 ﻿using Acb.Core.Exceptions;
 using Acb.Core.Helper;
 using Acb.Core.Logging;
+using Quartz;
+using Quartz.Impl;
 using Spear.Sharp.Business.Domain;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos.Job;
 using Spear.Sharp.Contracts.Enums;
-using Quartz;
-using Quartz.Impl;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -177,6 +177,7 @@ namespace Spear.Sharp.Business.Scheduler
                 .WithIdentity($"{IdentityHelper.Guid32}")
                 .StartNow()
                 .Build();
+            dto.Id = Guid.NewGuid();
             await RunJob(dto, trigger);
         }
 
