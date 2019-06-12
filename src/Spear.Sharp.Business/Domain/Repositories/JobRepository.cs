@@ -95,7 +95,17 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 switch (dto.Type)
                 {
                     case JobType.Http:
-                        var detail = dto.Detail.MapTo<TJobHttp>();
+                        var detail = new TJobHttp
+                        {
+                            Id = dto.Detail.Id,
+                            Method = dto.Detail.Method,
+                            Url = dto.Detail.Url,
+                            BodyType = dto.Detail.BodyType,
+                            Data = dto.Detail.Data
+                        };
+                        if (dto.Detail.Header != null && dto.Detail.Header.Any())
+                            detail.Header = JsonConvert.SerializeObject(dto.Detail.Header);
+
                         count += await conn.InsertAsync(detail, trans: trans);
                         break;
                 }
@@ -138,7 +148,16 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 switch (dto.Type)
                 {
                     case JobType.Http:
-                        var detail = dto.Detail.MapTo<TJobHttp>();
+                        var detail = new TJobHttp
+                        {
+                            Id = dto.Detail.Id,
+                            Method = dto.Detail.Method,
+                            Url = dto.Detail.Url,
+                            BodyType = dto.Detail.BodyType,
+                            Data = dto.Detail.Data
+                        };
+                        if (dto.Detail.Header != null && dto.Detail.Header.Any())
+                            detail.Header = JsonConvert.SerializeObject(dto.Detail.Header);
                         count += await conn.UpdateAsync(detail,
                             new[]
                             {

@@ -90,8 +90,6 @@ namespace Spear.Sharp.Business.Scheduler
 
         private static TriggerBuilder GetTrigger(TriggerDto trigger)
         {
-            if (trigger.Type == TriggerType.Simple && trigger.Times == 0)
-                return null;
             var triggerBuilder = TriggerBuilder.Create()
                 .WithIdentity(trigger.Id.ToString("N"));
             if (trigger.Start.HasValue)
@@ -101,7 +99,8 @@ namespace Spear.Sharp.Business.Scheduler
             switch (trigger.Type)
             {
                 case TriggerType.Cron:
-                    triggerBuilder.WithCronSchedule(trigger.Corn);
+                    //当设置了start或者end时，启动调度时会自动执行，添加WithMisfireHandlingInstructionDoNothing阻止
+                    triggerBuilder.WithCronSchedule(trigger.Corn, b => b.WithMisfireHandlingInstructionDoNothing());
                     break;
                 case TriggerType.Simple:
                     if (trigger.Times == 0)
@@ -112,7 +111,7 @@ namespace Spear.Sharp.Business.Scheduler
                             var sb = b.WithIntervalInSeconds(trigger.Interval);
                             if (trigger.Times > 1)
                                 sb.WithRepeatCount(trigger.Times - 1);
-                            else
+                            else if (trigger.Times == -1)
                                 sb.RepeatForever();
                         });
                     break;
@@ -227,12 +226,21 @@ namespace Spear.Sharp.Business.Scheduler
                     return;
                 var job = await _scheduler.GetJobDetail(new JobKey(dto.JobId.ToString("N")));
                 if (job == null)
+                {
+                    //任务不存在则重新run
+                    var jobDto = await _jobContract.GetAsync(dto.JobId);
+                    if (jobDto.Status == JobStatus.Enabled)
+                    {
+                        await RunJob(jobDto);
+                    }
                     return;
+                }
+
                 var triggerBuilder = GetTrigger(dto);
                 if (triggerBuilder == null)
                     return;
                 var trigger = triggerBuilder.ForJob(job).Build();
-                await _scheduler.ScheduleJob(job, trigger);
+                await _scheduler.ScheduleJob(trigger);
             }
         }
 

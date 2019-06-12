@@ -1,4 +1,5 @@
 ﻿using Acb.Core;
+using Acb.Core.Exceptions;
 using Acb.Core.Helper;
 using Acb.Core.Timing;
 using Acb.Dapper;
@@ -24,6 +25,8 @@ namespace Spear.Sharp.Business
 
         public async Task<int> AddAsync(Guid accountId, string name, string code, ProviderType provider, string connectionString)
         {
+            if (await _repository.ExistsCodeAsync(code))
+                throw new BusiException("编码已存在");
             var model = new TDatabase
             {
                 Id = IdentityHelper.NewSequentialGuid(),
@@ -38,9 +41,13 @@ namespace Spear.Sharp.Business
             return await _repository.InsertAsync(model);
         }
 
-        public async Task<DatabaseTablesDto> GetAsync(Guid id)
+        public async Task<DatabaseTablesDto> GetAsync(string key)
         {
-            var model = await _repository.QueryByIdAsync(id);
+            TDatabase model;
+            if (Guid.TryParse(key, out var id))
+                model = await _repository.QueryByIdAsync(id);
+            else
+                model = await _repository.QueryByIdAsync(key, nameof(TDatabase.Code));
             var provider = (ProviderType)model.Provider;
             var uw = new UnitOfWork(model.ConnectionString, provider.ToString());
             var service = uw.Service();

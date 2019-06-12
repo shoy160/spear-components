@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Acb.AutoMapper" Version="1.6.3" />
-    <PackageReference Include="Acb.Dapper" Version="1.6.3" />
+    <PackageReference Include="Acb.Dapper" Version="1.6.6" />
     <PackageReference Include="Acb.Dapper.MySql" Version="1.6.3" />
     <PackageReference Include="Acb.Dapper.PostgreSql" Version="1.6.3" />
     <PackageReference Include="Acb.Dapper.SQLite" Version="1.6.3" />

@@ -44,6 +44,6 @@ export const remove = id => {
   return request.delete(`/api/database/${id}`)
 }
 
-export const viewUrl = id => {
-  return `${process.env.BASE_API}/tables/${id}`
+export const viewUrl = row => {
+  return `${process.env.BASE_API}/tables/${row.code}`
 }

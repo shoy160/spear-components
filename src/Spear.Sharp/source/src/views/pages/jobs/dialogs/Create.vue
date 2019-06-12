@@ -3,22 +3,22 @@
     :visible.sync="dialogVisible"
     :title="title"
     width="50%">
-    <el-form label-width="100px">
-      <el-form-item label="任务组名">
+    <el-form ref="jobForm" :model="model" :rules="rules" label-width="100px">
+      <el-form-item label="任务组名" prop="group">
         <el-input v-model="model.group" placeholder="请输入任务组名" style="width:20rem;" />
       </el-form-item>
-      <el-form-item label="任务名称">
+      <el-form-item label="任务名称" prop="name">
         <el-input v-model="model.name" placeholder="请输入任务组名" style="width:20rem;" />
       </el-form-item>
-      <el-form-item label="任务类型">
+      <el-form-item label="任务类型" prop="type">
         <el-select v-model="model.type" placeholder="选择任务类型">
           <el-option :key="0" :value="0" label="Http"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="请求地址">
+      <el-form-item :rules="{ required: true, message: '请输入请求地址', trigger: 'blur' }" prop="detail.url" label="请求地址">
         <el-input v-model="model.detail.url" placeholder="请输入请求地址" />
       </el-form-item>
-      <el-form-item label="请求类型">
+      <el-form-item :rules="{ required: true, message: '请选择请求类型', trigger: 'change' }" prop="detail.method" label="请求类型">
         <el-radio v-model="model.detail.method" :label="0">Get</el-radio>
         <el-radio v-model="model.detail.method" :label="1">Post</el-radio>
         <el-radio v-model="model.detail.method" :label="2">Delete</el-radio>
@@ -63,7 +63,18 @@ export default {
       title: '创建定时任务',
       dialogVisible: this.show,
       create: true,
-      model: Object.assign({ detail: {}}, this.value)
+      model: Object.assign({ detail: {}}, this.value),
+      rules: {
+        group: [
+          { required: true, message: '请输入任务分组', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入任务名称', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请选择任务类型', trigger: 'change' }
+        ]
+      }
     }
   },
   watch: {
@@ -72,6 +83,9 @@ export default {
     },
     dialogVisible(val) {
       this.$emit('visibleChange', val)
+      if (this.$refs['jobForm']) {
+        this.$refs['jobForm'].resetFields()
+      }
     },
     value(val) {
       this.create = !val || !val.id
@@ -88,19 +102,24 @@ export default {
   },
   methods: {
     handleSave() {
-      if (this.create) {
-        create(this.model).then(json => {
-          this.$message.success(`${this.title}成功`)
-          this.dialogVisible = false
-          this.$emit('success')
-        })
-      } else {
-        save(this.model).then(json => {
-          this.$message.success(`${this.title}成功`)
-          this.dialogVisible = false
-          this.$emit('success')
-        })
-      }
+      this.$refs['jobForm'].validate(valid => {
+        if (!valid) {
+          return false
+        }
+        if (this.create) {
+          create(this.model).then(json => {
+            this.$message.success(`${this.title}成功`)
+            this.dialogVisible = false
+            this.$emit('success')
+          })
+        } else {
+          save(this.model).then(json => {
+            this.$message.success(`${this.title}成功`)
+            this.dialogVisible = false
+            this.$emit('success')
+          })
+        }
+      })
     }
   }
 }

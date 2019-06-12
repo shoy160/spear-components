@@ -172,8 +172,8 @@
       </el-table-column>
     </el-table>
     <logs :value="currentJob" :trigger-id="currentTriggerId" :show="showLogs" @visibleChange="handleLogsVisible" />
-    <create :value="currentJob" :show="showCreate" @visibleChange="handleCreateVisible" @success="getList()" />
-    <trigger :value="currentTrigger" :job="currentJob" :show="showTrigger" @visibleChange="handleTriggerVisible" />
+    <create :value="currentJob" :show="showCreate" @visibleChange="handleCreateVisible" @success="getList" />
+    <trigger :value="currentTrigger" :job="currentJob" :show="showTrigger" @visibleChange="handleTriggerVisible" @success="getList" />
   </div>
 </template>
 <script>

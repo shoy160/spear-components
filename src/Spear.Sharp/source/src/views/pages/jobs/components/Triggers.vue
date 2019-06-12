@@ -31,7 +31,7 @@
           {{ scope.row.type === 1 ? '--' : `${scope.row.interval}秒` }}
         </template>
       </el-table-column>
-      <el-table-column label="重复次数" prop="times">
+      <el-table-column label="执行次数" prop="times">
         <template slot-scope="scope">
           {{ scope.row.type === 1 ? '--' : (scope.row.times >= 0 ? `${scope.row.times}次` : '永久') }}
         </template>
@@ -68,7 +68,7 @@
         <template slot-scope="scope">
           <el-button v-if="job.status !== 4" :title="$t('table.edit')" type="primary" size="mini" icon="el-icon-edit" circle @click="handleEdit(scope.row)"/>
           <el-button :title="$t('jobTable.logs')" type="info" size="mini" icon="el-icon-more" circle @click="handleLogs(scope.row)"/>
-          <el-button v-if="job.status !== 4" :title="$t('table.delete')" type="danger" size="mini" icon="el-icon-delete" circle/>
+          <el-button v-if="job.status !== 4" :title="$t('table.delete')" type="danger" size="mini" icon="el-icon-delete" circle @click="handleRemove(scope.row.id)" />
         </template>
       </el-table-column>
     </el-table>
@@ -113,9 +113,11 @@ export default {
       }
     },
     handleRemove(id) {
-      removeTrigger(id).then(() => {
-        this.$message.succss('删除触发器成功')
-        this.getList()
+      this.$confirm('确认删除触发器？').then(() => {
+        removeTrigger(id).then(() => {
+          this.$message.success('删除触发器成功')
+          this.getList()
+        })
       })
     },
     handleStatusChange(row) {

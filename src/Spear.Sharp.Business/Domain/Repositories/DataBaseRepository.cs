@@ -62,5 +62,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 Status = (byte)status
             }, new[] { nameof(TDatabase.Status) }, Trans);
         }
+
+        public async Task<bool> ExistsCodeAsync(string code)
+        {
+            return await Connection.ExistsAsync<TDatabase>(nameof(TDatabase.Code), code);
+        }
     }
 }

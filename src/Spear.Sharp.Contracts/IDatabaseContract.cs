@@ -18,13 +18,12 @@ namespace Spear.Sharp.Contracts
         /// <param name="provider"></param>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        Task<int> AddAsync(Guid accountId, string name,string code, ProviderType provider, string connectionString);
+        Task<int> AddAsync(Guid accountId, string name, string code, ProviderType provider, string connectionString);
 
         /// <summary> 获取数据表 </summary>
-        /// <param name="id"></param>
+        /// <param name="key">id或者code</param>
         /// <returns></returns>
-        Task<DatabaseTablesDto> GetAsync(Guid id);
-
+        Task<DatabaseTablesDto> GetAsync(string key);
         /// <summary> 数据库列表 </summary>
         /// <param name="accountId"></param>
         /// <param name="keyword"></param>
@@ -42,7 +41,7 @@ namespace Spear.Sharp.Contracts
         /// <param name="type"></param>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        Task<int> SetAsync(Guid id, string name,string code, ProviderType type, string connectionString);
+        Task<int> SetAsync(Guid id, string name, string code, ProviderType type, string connectionString);
 
         /// <summary> 删除数据库配置 </summary>
         /// <param name="id"></param>

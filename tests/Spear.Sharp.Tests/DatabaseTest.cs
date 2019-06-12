@@ -19,7 +19,7 @@ namespace Spear.Sharp.Tests
         [TestMethod]
         public async Task TablesTest()
         {
-            var db = await _contract.GetAsync(new Guid("b5ff8cc7-2100-ced2-d13a-08d67552b2a1"));
+            var db = await _contract.GetAsync("b5ff8cc7-2100-ced2-d13a-08d67552b2a1");
             Print(db);
         }
     }

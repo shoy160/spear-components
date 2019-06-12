@@ -1,11 +1,11 @@
 ﻿using Acb.AutoMapper;
 using Acb.Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos.Database;
 using Spear.Sharp.Contracts.Enums;
 using Spear.Sharp.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -70,14 +70,14 @@ namespace Spear.Sharp.Controllers
         }
 
         /// <summary> 数据库文档 </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        [HttpGet("/tables/{id:guid}"), AllowAnonymous, ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> Tables(Guid id)
+        [HttpGet("/tables/{key}"), AllowAnonymous, ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> Tables(string key)
         {
             try
             {
-                var dto = await _contract.GetAsync(id);
+                var dto = await _contract.GetAsync(key);
                 ViewBag.DbName = dto.DbName;
                 ViewBag.Provider = dto.Provider;
                 ViewBag.Name = dto.Name;

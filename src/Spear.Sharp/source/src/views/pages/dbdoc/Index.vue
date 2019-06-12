@@ -82,7 +82,7 @@
       >
         <template slot-scope="scope">
           <a
-            :href="viewUrl(scope.row.id)"
+            :href="viewUrl(scope.row)"
             target="_blank"
             title="查看文档"
             class="el-button el-button--success el-button--mini is-circle"
@@ -192,8 +192,8 @@ export default {
         })
       })
     },
-    viewUrl(id) {
-      return viewUrl(id)
+    viewUrl(row) {
+      return viewUrl(row)
     }
   }
 }

@@ -10,6 +10,10 @@
     <DocumentationFile>bin\Debug\netcoreapp2.1\Acb.Spear.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.1\Spear.Sharp.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Scheduler\**" />
     <Compile Remove="source\**" />
@@ -36,10 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.6.4" />
-    <PackageReference Include="Acb.WebApi" Version="1.6.3" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="Acb.Core" Version="1.6.7" />
+    <PackageReference Include="Acb.WebApi" Version="1.6.6" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
   </ItemGroup>
 

@@ -4,22 +4,27 @@
     :title="title"
     width="50%"
   >
-    <el-form label-width="100px">
-      <el-form-item label="名称">
+    <el-form
+      ref="docForm"
+      :model="model"
+      :rules="rules"
+      label-width="100px"
+    >
+      <el-form-item label="名称" prop="name">
         <el-input
           v-model="model.name"
           placeholder="请输入连接名称"
           style="width:20rem;"
         />
       </el-form-item>
-      <el-form-item label="编码">
+      <el-form-item label="编码" prop="code">
         <el-input
           v-model="model.code"
           placeholder="请输入编码"
           style="width:20rem;"
         />
       </el-form-item>
-      <el-form-item label="任务类型">
+      <el-form-item label="数据库驱动" prop="provider">
         <el-select
           v-model="model.provider"
           placeholder="选择类型"
@@ -32,7 +37,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据库连接">
+      <el-form-item label="数据库连接" prop="connectionString">
         <el-input
           v-model="model.connectionString"
           placeholder="请输入数据库连接"
@@ -91,7 +96,23 @@ export default {
           value: 'SQLite'
         }
       ],
-      model: Object.assign({ detail: {}}, this.value)
+      model: Object.assign({ detail: {}}, this.value),
+      rules: {
+        name: [
+          { required: true, message: '请输入文档名称', trigger: 'blur' },
+          { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入文档编码', trigger: 'blur' },
+          { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
+        ],
+        provider: [
+          { required: true, message: '请选择数据库驱动', trigger: 'change' }
+        ],
+        connectionString: [
+          { required: true, message: '请输入数据库连接字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   watch: {
@@ -116,19 +137,26 @@ export default {
   },
   methods: {
     handleSave() {
-      if (this.create) {
-        add(this.model).then(json => {
-          this.$message.success(`${this.title}成功`)
-          this.dialogVisible = false
-          this.$emit('success')
-        })
-      } else {
-        edit(this.model).then(json => {
-          this.$message.success(`${this.title}成功`)
-          this.dialogVisible = false
-          this.$emit('success')
-        })
-      }
+      console.log(this.model)
+      this.$refs['docForm'].validate(valid => {
+        console.log(valid)
+        if (!valid) {
+          return false
+        }
+        if (this.create) {
+          add(this.model).then(json => {
+            this.$message.success(`${this.title}成功`)
+            this.dialogVisible = false
+            this.$emit('success')
+          })
+        } else {
+          edit(this.model).then(json => {
+            this.$message.success(`${this.title}成功`)
+            this.dialogVisible = false
+            this.$emit('success')
+          })
+        }
+      })
     }
   }
 }
