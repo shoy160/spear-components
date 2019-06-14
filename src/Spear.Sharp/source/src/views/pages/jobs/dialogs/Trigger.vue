@@ -54,8 +54,13 @@
         <el-input
           v-model="model.corn"
           placeholder="请输入Corn表达式"
-          style="width:20rem;"
+          style="width:220px;"
         />
+        <a
+          href="http://www.bejson.com/othertools/cron/"
+          target="_blank"
+          class="link-type"
+        >Corn表达式生成</a>
       </el-form-item>
       <template v-if="model.type === 2">
         <el-form-item

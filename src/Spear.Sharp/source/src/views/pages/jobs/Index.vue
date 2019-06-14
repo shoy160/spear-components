@@ -49,7 +49,11 @@
             <el-form-item label="url">{{ scope.row.detail.url }}</el-form-item>
             <el-form-item label="data">{{ scope.row.detail.data }}</el-form-item>
           </el-form>
-          <triggers :job="scope.row" @edit="handleTriggerEdit" @logs="handleTriggerLogs" />
+          <triggers
+            :job="scope.row"
+            @edit="handleTriggerEdit"
+            @logs="handleTriggerLogs"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -96,7 +100,11 @@
           {{ scope.row.creationTime | parseTime() }}
         </template>
       </el-table-column>
-      <el-table-column label="任务状态" prop="status" width="100" >
+      <el-table-column
+        label="任务状态"
+        prop="status"
+        width="100"
+      >
         <template slot-scope="scope">
           <el-switch
             :value="scope.row.status"
@@ -106,7 +114,8 @@
             :disabled="scope.row.status === 4"
             active-color="#13ce66"
             inactive-color="#ff4949"
-            @change="handleStatusChange(scope.row)"/>
+            @change="handleStatusChange(scope.row)"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -158,7 +167,8 @@
             size="mini"
             icon="el-icon-caret-right"
             circle
-            @click="handleRun(scope.row)"/>
+            @click="handleRun(scope.row)"
+          />
           <el-button
             v-if="scope.row.status !== 4"
             :title="$t('table.delete')"
@@ -171,9 +181,35 @@
         </template>
       </el-table-column>
     </el-table>
-    <logs :value="currentJob" :trigger-id="currentTriggerId" :show="showLogs" @visibleChange="handleLogsVisible" />
-    <create :value="currentJob" :show="showCreate" @visibleChange="handleCreateVisible" @success="getList" />
-    <trigger :value="currentTrigger" :job="currentJob" :show="showTrigger" @visibleChange="handleTriggerVisible" @success="getList" />
+    <div class="pagination-container">
+      <el-pagination
+        :total="total"
+        :page-sizes="[10, 25, 50, 100]"
+        background
+        layout="total, sizes, prev, pager, next"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
+    <logs
+      :value="currentJob"
+      :trigger-id="currentTriggerId"
+      :show="showLogs"
+      @visibleChange="handleLogsVisible"
+    />
+    <create
+      :value="currentJob"
+      :show="showCreate"
+      @visibleChange="handleCreateVisible"
+      @success="getList"
+    />
+    <trigger
+      :value="currentTrigger"
+      :job="currentJob"
+      :show="showTrigger"
+      @visibleChange="handleTriggerVisible"
+      @success="getList"
+    />
   </div>
 </template>
 <script>
@@ -238,20 +274,30 @@ export default {
     },
     getList() {
       this.loading = true
-      jobApi.list(this.query).then(json => {
-        this.total = json.total
-        this.list = json.data
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
-      })
+      jobApi
+        .list(this.query)
+        .then(json => {
+          this.total = json.total
+          this.list = json.data
+          this.loading = false
+        })
+        .catch(e => {
+          this.loading = false
+        })
     },
     handleSearch() {
       this.query.page = 1
       this.getList()
     },
     handleUpdate(row, status) {
-      var text = status === 1 ? '开启' : (status === 0 ? '暂停' : (status === 4 ? '删除' : ''))
+      var text =
+        status === 1
+          ? '开启'
+          : status === 0
+            ? '暂停'
+            : status === 4
+              ? '删除'
+              : ''
       if (row.status === 4 && status === 0) {
         text = '恢复'
       }
@@ -275,8 +321,12 @@ export default {
       })
     },
     handleStatusChange(row) {
-      if (row.status === 0) { return this.handleUpdate(row, 1) }
-      if (row.status === 1) { return this.handleUpdate(row, 0) }
+      if (row.status === 0) {
+        return this.handleUpdate(row, 1)
+      }
+      if (row.status === 1) {
+        return this.handleUpdate(row, 0)
+      }
     },
     handleRun(row) {
       this.$confirm('确认要立即执行任务？').then(() => {
@@ -318,6 +368,15 @@ export default {
       this.currentJob = job
       this.currentTriggerId = triggerId
       this.showLogs = true
+    },
+    handleSizeChange(val) {
+      this.query.page = 1
+      this.query.size = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.query.page = val
+      this.getList()
     }
   }
 }

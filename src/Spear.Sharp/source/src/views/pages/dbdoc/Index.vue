@@ -110,7 +110,22 @@
         </template>
       </el-table-column>
     </el-table>
-    <create :value="current" :show="showCreate" @visibleChange="handleCreateVisible" @success="loadList()" />
+    <div class="pagination-container">
+      <el-pagination
+        :total="total"
+        :page-sizes="[10, 25, 50, 100]"
+        background
+        layout="total, sizes, prev, pager, next"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
+    <create
+      :value="current"
+      :show="showCreate"
+      @visibleChange="handleCreateVisible"
+      @success="loadList()"
+    />
   </div>
 </template>
 <script>
@@ -194,6 +209,15 @@ export default {
     },
     viewUrl(row) {
       return viewUrl(row)
+    },
+    handleSizeChange(val) {
+      this.query.page = 1
+      this.query.size = val
+      this.loadList()
+    },
+    handleCurrentChange(val) {
+      this.query.page = val
+      this.loadList()
     }
   }
 }
