@@ -175,12 +175,19 @@
                     var button = $(event.relatedTarget);
                     var entity = button.data('entity');
                 });
-            $(document).ready(function () {
-                $('pre code').each(function (i, block) {
-                    H.highlightBlock(block);
-                    H.lineNumbersBlock(block, { singleLine: true });
-                });
-            });
+            $(document)
+                .ready(function() {
+                    $('pre code').each(function(i, block) {
+                        H.highlightBlock(block);
+                        H.lineNumbersBlock(block, { singleLine: true });
+                    });
+                })
+                .delegate('.b-naming','change',
+                    function() {
+                        var val = $(this).find('option:selected').val();
+                        $('.d-naming').toggleClass('hide', val == 1);
+                        $('.d-table').toggleClass('hide', val == 0);
+                    });
         })(jQuery, hljs)
     </script>
 </body>

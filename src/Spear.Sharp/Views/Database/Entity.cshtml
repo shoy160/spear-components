@@ -1,6 +1,7 @@
 ﻿@using Acb.Core.Extensions
 @using Acb.Core.Helper
 @using Spear.Sharp.Contracts.Enums
+@using Spear.Sharp.Domain
 @model Spear.Sharp.Contracts.Dtos.Database.TableDto
 @{
     var provider = ViewData.GetValue<ProviderType>("Provider");
@@ -14,25 +15,28 @@
             <h4 class="modal-title">@Model.Name<small style="margin-left: 15px">@Model.Description</small></h4>
         </div>
         <div class="modal-body">
-            <div>
+            <div class="row" style="margin: 0 0 15px 0">
+                <div class="col-sm-offset-6 col-sm-3">
+                    <select class="form-control">
+                        <option>C#</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 b-naming">
+                    <select class="form-control">
+                        <option value="0">Naming</option>
+                        <option value="1">Table</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-naming">
                 <pre>
-<code class="cs"><text>///&lt;summary&gt; @(string.IsNullOrWhiteSpace(Model.Description) ? Model.Name : Model.Description) &lt;/summary&gt;</text>
-[Naming("@Model.Name")]
-public class @Model.ConvertedName: BaseEntity&lt;@(primary?.LanguageType(provider, language) ?? "string")&gt;
-{@foreach (var col in Model.Columns)
- {
-     <text>
-    ///&lt;summary&gt; @(RegexHelper.ClearTrn(string.IsNullOrWhiteSpace(col.Description) ? col.Name : col.Description)) &lt;/summary&gt;
-    @if (col.IsConverted)
-    {
-        <text>    [Naming("@col.Name")]
-</text>
-    }
-    public @(col.IsPrimaryKey ? "override " : "")@col.LanguageType(provider, language) @col.ConvertedName { get; set; }
-</text>
- }
-}</code>
-</pre>
+<code class="cs">@Model.EntityCode(provider, language, true)</code>
+                </pre>
+            </div>
+            <div class="d-table hide">
+                <pre>
+<code class="cs">@Model.EntityCode(provider, language, false)</code>
+                </pre>
             </div>
         </div>
     </div>

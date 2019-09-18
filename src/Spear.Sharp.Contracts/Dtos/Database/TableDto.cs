@@ -26,7 +26,7 @@ namespace Spear.Sharp.Contracts.Dtos.Database
         public bool HasAutoIncrement { get { return Columns.Any(m => m.AutoIncrement); } }
 
         /// <summary> 描述 </summary>
-        public string Description { get; set; }
+        public override string Description { get; set; }
 
         public IEnumerable<ColumnDto> Columns { get; set; }
     }

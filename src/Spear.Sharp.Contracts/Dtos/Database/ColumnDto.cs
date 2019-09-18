@@ -7,6 +7,7 @@ namespace Spear.Sharp.Contracts.Dtos.Database
     {
         /// <summary> 编号 </summary>
         public int Id { get; set; }
+
         /// <summary> 列名 </summary>
         public override string Name { get; set; }
 
@@ -20,7 +21,7 @@ namespace Spear.Sharp.Contracts.Dtos.Database
         public bool IsNullable { get; set; }
 
         /// <summary> 描述 </summary>
-        public string Description { get; set; }
+        public override string Description { get; set; }
 
         /// <summary> 是否自增 </summary>
         public bool AutoIncrement { get; set; }

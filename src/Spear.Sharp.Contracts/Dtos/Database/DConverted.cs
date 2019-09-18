@@ -24,6 +24,9 @@ namespace Spear.Sharp.Contracts.Dtos.Database
             }
         }
 
+        /// <summary> 描述 </summary>
+        public abstract string Description { get; set; }
+
         public bool IsConverted => Name != ConvertedName;
     }
 }
