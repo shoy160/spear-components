@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Spear.Sharp.Client
 {
@@ -76,14 +77,15 @@ namespace Spear.Sharp.Client
         {
             var url = $"{_option.Url}/{type.GetText()}";
             return new HubConnectionBuilder()
-                .WithUrl(url, async opts =>
+                .WithUrl(url, opts =>
                 {
-                    await LoadTicket();
+                    LoadTicket().SyncRun();
                     foreach (var header in _headers)
                     {
                         opts.Headers.Add(header.Key, header.Value);
                     }
                 })
+                .AddNewtonsoftJsonProtocol()
                 .Build();
         }
 
@@ -146,6 +148,7 @@ namespace Spear.Sharp.Client
         public async Task StartJob(JobOption option)
         {
             _jobHub = Connect(SpearType.Jobs);
+            await Task.CompletedTask;
         }
 
         public void Dispose()

@@ -1,11 +1,11 @@
 ﻿using Acb.Core.Dependency;
 using Acb.Core.Extensions;
 using Acb.Core.Timing;
+using Acb.WebApi;
+using Microsoft.AspNetCore.Http;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos;
 using Spear.Sharp.Contracts.Enums;
-using Acb.WebApi;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 
@@ -89,7 +89,8 @@ namespace Spear.Sharp.Domain
             var code = context.GetProjectCode();
             if (string.IsNullOrWhiteSpace(code))
                 return null;
-            var contract = CurrentIocManager.Resolve<IProjectContract>();
+            using var scope = CurrentIocManager.BeginLifetimeScope();
+            var contract = scope.Resolve<IProjectContract>();
             return contract.DetailByCodeAsync(code).SyncRun();
         }
 
@@ -99,9 +100,10 @@ namespace Spear.Sharp.Domain
         public static ProjectDto GetProjectByToken(this HttpContext context)
         {
             var ticket = context.GetTicket();
-            if (ticket == null || !ticket.ProjectId.HasValue)
+            if (ticket?.ProjectId == null)
                 return null;
-            var contract = CurrentIocManager.Resolve<IProjectContract>();
+            using var scope = CurrentIocManager.BeginLifetimeScope();
+            var contract = scope.Resolve<IProjectContract>();
             return contract.DetailAsync(ticket.ProjectId.Value).SyncRun();
         }
 

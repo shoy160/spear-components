@@ -13,6 +13,7 @@ using Spear.Sharp.Contracts.Enums;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Acb.Core.Dependency;
 
 namespace Spear.Sharp.Business.Domain.Repositories
 {
@@ -43,12 +44,13 @@ namespace Spear.Sharp.Business.Domain.Repositories
             const string sql =
                 "SELECT [Content] FROM [t_config] WHERE [Status]=0 AND [ProjectId]=@projectId AND [Name]=@name AND ([Mode]=@mode OR [Mode] IS NULL) ORDER BY [Mode]";
 
-            return await Connection.QueryFirstOrDefaultAsync<string>(Connection.FormatSql(sql), new
-            {
-                projectId,
-                name = module,
-                mode = env
-            });
+            using (var conn = GetConnection())
+                return await conn.QueryFirstOrDefaultAsync<string>(Connection.FormatSql(sql), new
+                {
+                    projectId,
+                    name = module,
+                    mode = env
+                });
         }
 
         /// <summary> 查询配置版本 </summary>
@@ -60,13 +62,15 @@ namespace Spear.Sharp.Business.Domain.Repositories
         {
             const string sql =
                 "SELECT [Md5] FROM [t_config] WHERE [Status]=0 AND [ProjectId]=@projectId AND [Name]=@name AND [Status]=0 AND ([Mode]=@mode OR [Mode] IS NULL) ORDER BY [Mode]";
-
-            return await Connection.QueryFirstOrDefaultAsync<string>(Connection.FormatSql(sql), new
+            using (var conn = GetConnection())
             {
-                projectId,
-                name = module,
-                mode = env
-            });
+                return await conn.QueryFirstOrDefaultAsync<string>(conn.FormatSql(sql), new
+                {
+                    projectId,
+                    name = module,
+                    mode = env
+                });
+            }
         }
 
         /// <summary> 查询配置历史版本 </summary>
@@ -97,7 +101,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 if (history == null || history.Status != (byte)ConfigStatus.History)
                     throw new BusiException("历史版本不存在");
 
-                var count = await Connection.ExecuteAsync(Connection.FormatSql(updateSql), new
+                var count = await TransConnection.ExecuteAsync(Connection.FormatSql(updateSql), new
                 {
                     projectId = history.ProjectId,
                     name = history.Name,
@@ -105,7 +109,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 }, Trans);
                 //更新状态
                 history.Status = (byte)ConfigStatus.Normal;
-                count += await Connection.UpdateAsync(history, new[] { nameof(TConfig.Status) }, Trans);
+                count += await TransConnection.UpdateAsync(history, new[] { nameof(TConfig.Status) }, Trans);
                 return count > 0 ? history : null;
             });
         }
@@ -121,12 +125,11 @@ namespace Spear.Sharp.Business.Domain.Repositories
             var version = await QueryVersionAsync(model.ProjectId, model.Name, model.Mode);
             if (version != null && version == model.Md5)
                 throw new BusiException("配置未更改");
-
             //更新之前版本为历史版本
             return await UnitOfWork.Trans(async () =>
             {
                 var count = await DeleteByModuleAsync(model.ProjectId, model.Name, model.Mode);
-                count += await Connection.InsertAsync(model, trans: Trans);
+                count += await TransConnection.InsertAsync(model, trans: Trans);
                 return count;
             });
         }
@@ -163,7 +166,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
             }
 
             var sql = Connection.FormatSql(updateSql.ToString());
-            return await Connection.ExecuteAsync(sql, new { projectId, name = module, mode = env },
+            return await TransConnection.ExecuteAsync(sql, new { projectId, name = module, mode = env },
                 Trans);
         }
     }

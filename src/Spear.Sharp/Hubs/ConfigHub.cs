@@ -1,6 +1,6 @@
 ﻿using Acb.Core.Dependency;
-using Spear.Sharp.Contracts;
 using Microsoft.AspNetCore.SignalR;
+using Spear.Sharp.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,13 +25,15 @@ namespace Spear.Sharp.Hubs
 
             if (ProjectId.HasValue)
             {
-                var contract = CurrentIocManager.Resolve<IConfigContract>();
+                using var scope = CurrentIocManager.BeginLifetimeScope();
+                var contract = scope.Resolve<IConfigContract>();
                 var dict = new Dictionary<string, object>();
                 foreach (var module in modules)
                 {
                     var config = await contract.GetAsync(ProjectId.Value, module, env);
                     dict.Add(module, config);
                 }
+
                 await Clients.Caller.SendAsync("UPDATE", dict);
             }
         }

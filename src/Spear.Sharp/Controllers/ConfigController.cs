@@ -1,13 +1,14 @@
 ﻿using Acb.Core;
+using Acb.Core.Dependency;
 using Acb.Core.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos;
 using Spear.Sharp.Contracts.Enums;
 using Spear.Sharp.Filters;
 using Spear.Sharp.Hubs;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,27 +37,33 @@ namespace Spear.Sharp.Controllers
         /// <param name="env"></param>
         /// <param name="config"></param>
         /// <returns></returns>
-        private async Task NotifyConfig(string module, string env, object config)
+        private void NotifyConfig(string module, string env, object config)
         {
-            if (string.IsNullOrWhiteSpace(env))
+            Task.Factory.StartNew<Task>(async () =>
             {
-                //default
-                var existsEnvs = (await _contract.GetEnvsAsync(Project.Id, module)).ToList();
-                foreach (ConfigEnv configEnv in Enum.GetValues(typeof(ConfigEnv)))
+                using var scope = CurrentIocManager.BeginLifetimeScope();
+                var hub = scope.Resolve<IHubContext<ConfigHub>>();
+                if (string.IsNullOrWhiteSpace(env))
                 {
-                    var item = configEnv.ToString().ToLower();
-                    if (existsEnvs.Contains(item))
+                    var contract = scope.Resolve<IConfigContract>();
+                    //default
+                    var existsEnvs = (await contract.GetEnvsAsync(Project.Id, module)).ToList();
+                    foreach (ConfigEnv configEnv in Enum.GetValues(typeof(ConfigEnv)))
                     {
-                        continue;
-                    }
+                        var item = configEnv.ToString().ToLower();
+                        if (existsEnvs.Contains(item))
+                        {
+                            continue;
+                        }
 
-                    await _configHub.UpdateAsync(Project.Code, module, item, config);
+                        await hub.UpdateAsync(Project.Code, module, item, config);
+                    }
                 }
-            }
-            else
-            {
-                await _configHub.UpdateAsync(Project.Code, module, env, config);
-            }
+                else
+                {
+                    await hub.UpdateAsync(Project.Code, module, env, config);
+                }
+            });
         }
 
         /// <summary> 获取配置 </summary>
@@ -80,7 +87,7 @@ namespace Spear.Sharp.Controllers
             if (env == "default") env = null;
             var result = await _contract.RemoveAsync(Project.Id, module, env);
             //:todo 通知删除 1.删除默认的，通知缺省的，2.删除具体的，获取默认再通知
-            await NotifyConfig(module, env, null);
+            NotifyConfig(module, env, null);
             return result > 0 ? DResult.Success : DResult.Error("删除失败");
         }
 
@@ -131,7 +138,7 @@ namespace Spear.Sharp.Controllers
             var result = await _contract.RecoveryAsync(id);
             if (result == null)
                 return DResult.Error("还原版本失败");
-            await NotifyConfig(result.Name, result.Mode, result.Config);
+            NotifyConfig(result.Name, result.Mode, result.Config);
             return DResult.Success;
         }
 
@@ -176,7 +183,7 @@ namespace Spear.Sharp.Controllers
             var result = await _contract.SaveAsync(model);
             if (result <= 0)
                 return DResult.Error("保存配置失败");
-            await NotifyConfig(module, env, config);
+            NotifyConfig(module, env, config);
             return DResult.Success;
         }
 

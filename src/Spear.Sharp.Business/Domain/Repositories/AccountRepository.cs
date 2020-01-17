@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using Acb.AutoMapper;
+﻿using Acb.AutoMapper;
 using Acb.Core.Exceptions;
 using Acb.Core.Extensions;
 using Acb.Dapper;
 using Acb.Dapper.Domain;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Contracts.Dtos.Account;
+using System.Threading.Tasks;
 
 namespace Spear.Sharp.Business.Domain.Repositories
 {
@@ -13,7 +13,8 @@ namespace Spear.Sharp.Business.Domain.Repositories
     {
         public async Task<bool> ExistsAccountAsync(string account)
         {
-            return await Connection.ExistsWhereAsync<TAccount>("[Account]=@account", new { account });
+            using (var conn = GetConnection())
+                return await conn.ExistsWhereAsync<TAccount>("[Account]=@account", new { account });
         }
 
         /// <summary> 查询账号 </summary>
@@ -21,7 +22,8 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <returns></returns>
         public async Task<TAccount> QueryAccountAsync(string account)
         {
-            return await Connection.QueryByIdAsync<TAccount>(account, nameof(TAccount.Account));
+            using (var conn = GetConnection())
+                return await conn.QueryByIdAsync<TAccount>(account, nameof(TAccount.Account));
         }
 
         public async Task<AccountDto> LoginAsync(string account, string password)
@@ -36,7 +38,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
 
         public async Task<int> UpdateAsync(TAccount model)
         {
-            return await Connection.UpdateAsync(model, new[] { nameof(TAccount.Nick), nameof(TAccount.Avatar) }, Trans);
+            return await TransConnection.UpdateAsync(model, new[] { nameof(TAccount.Nick), nameof(TAccount.Avatar) }, Trans);
         }
     }
 }

@@ -143,7 +143,10 @@
                     <caption>
                         <span class="label @(table.Type == TableType.Table ? "label-info" : "label-success")">@table.Type</span>
                         <h5>@table.Name</h5>
-                        <small>@table.Description</small>
+                        @if (!string.IsNullOrWhiteSpace(table.Description))
+                        {
+                            <small>@table.Description</small>
+                        }
                         <small><em>@table.Columns.Count()</em>个字段</small>
                         <a href="#" data-toggle="modal" class="d-model" data-target="#@("entityModal_" + table.Name)">Model实体</a>
                     </caption>

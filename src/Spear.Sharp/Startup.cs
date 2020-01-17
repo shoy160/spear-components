@@ -8,6 +8,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Hubs;
+using StackExchange.Redis;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -30,7 +31,16 @@ namespace Spear.Sharp
         {
             services.AddHttpClient();
             services.AddRazorPages();
-            services.AddSignalR();
+            services
+                .AddSignalR()
+                .AddRedis(option =>
+                {
+                    option.ConnectionFactory = async writer =>
+                    {
+                        var config = "redis:default".Config<string>();
+                        return await ConnectionMultiplexer.ConnectAsync(config, writer);
+                    };
+                });
             base.MapServices(services);
         }
 

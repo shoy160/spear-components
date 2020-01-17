@@ -1,10 +1,11 @@
-﻿using Spear.Sharp.Client;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System;
-using Acb.Core.Data.Config;
+﻿using Acb.Core.Data.Config;
 using Acb.Core.Extensions;
 using Acb.Framework;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Spear.Sharp.Client;
+using System;
 
 namespace Spear.Sharp.ConsoleTest
 {
@@ -14,10 +15,13 @@ namespace Spear.Sharp.ConsoleTest
         {
             MapServiceCollection += services =>
             {
+                services.AddLogging(builder => { builder.AddConsole(); });
                 services.AddSpear(new SpearOption
                 {
-                    Host = "localhost",
-                    Port = 53454,
+                    //Host = "localhost",
+                    //Port = 53454,
+                    Host = "spear.local",
+                    Port = 80,
                     Code = "ichebao",
                     Secret = "123456"
                 });

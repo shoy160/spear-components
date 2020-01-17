@@ -29,6 +29,9 @@ namespace Spear.Sharp.Client
                         ConfigModules = modules
                     });
                 }
+
+                if (!string.IsNullOrWhiteSpace(jobName))
+                    await client.StartJob(new JobOption());
             });
             return provider;
         }

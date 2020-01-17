@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Acb.Core" Version="1.8.4" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.1" />
   </ItemGroup>
 
 </Project>

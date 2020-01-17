@@ -82,14 +82,14 @@ namespace Spear.Sharp.Business
             return model.MapTo<ConfigDto>();
         }
 
-        public Task<int> SaveAsync(ConfigDto dto)
+        public async Task<int> SaveAsync(ConfigDto dto)
         {
-            return _repository.UpdateAsync(dto.MapTo<TConfig>());
+            return await _repository.UpdateAsync(dto.MapTo<TConfig>());
         }
 
-        public Task<int> RemoveAsync(Guid projectId, string module, string env)
+        public async Task<int> RemoveAsync(Guid projectId, string module, string env)
         {
-            return _repository.DeleteByModuleAsync(projectId, module, env);
+            return await _repository.DeleteByModuleAsync(projectId, module, env);
         }
 
         public Task<int> RemoveAsync(Guid configId)
