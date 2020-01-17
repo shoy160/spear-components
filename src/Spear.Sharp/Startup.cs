@@ -2,8 +2,10 @@
 using Acb.WebApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Hubs;
 using System;
@@ -27,22 +29,22 @@ namespace Spear.Sharp
         protected override void MapServices(IServiceCollection services)
         {
             services.AddHttpClient();
+            services.AddRazorPages();
+            services.AddSignalR();
             base.MapServices(services);
         }
 
-        /// <summary> 注册服务 </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        protected override void ConfigRoute(IEndpointRouteBuilder builder)
         {
-            services.AddSignalR();
-            return base.ConfigureServices(services);
+            builder.MapHub<ConfigHub>("/config_hub");
+            builder.MapHub<JobHub>("/job_hub");
+            base.ConfigRoute(builder);
         }
 
         /// <summary> 配置 </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public override void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -56,16 +58,9 @@ namespace Spear.Sharp
                 EnableDefaultFiles = true,
                 DefaultFilesOptions = { DefaultFileNames = new[] { "index.html" } }
             });
-            app.UseSignalR(route =>
-            {
-                //配置
-                route.MapHub<ConfigHub>("/config_hub");
-                //定时任务
-                route.MapHub<JobHub>("/job_hub");
-            });
-            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(t => true).AllowCredentials());
             var provider = app.ApplicationServices;
-            provider.GetService<IApplicationLifetime>().ApplicationStopping.Register(async () =>
+            provider.GetService<IHostApplicationLifetime>().ApplicationStopping.Register(async () =>
             {
                 await provider.GetService<ISchedulerContract>().Stop();
             });

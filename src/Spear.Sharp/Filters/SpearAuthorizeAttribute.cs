@@ -1,10 +1,10 @@
 ﻿using Acb.Core;
-using Spear.Sharp.Contracts.Enums;
-using Spear.Sharp.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Spear.Sharp.Contracts.Enums;
+using Spear.Sharp.Domain;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ namespace Spear.Sharp.Filters
     {
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (context.ActionDescriptor.FilterDescriptors.Any(t => t.Filter.GetType() == typeof(AllowAnonymousFilter)))
+            if (context.ActionDescriptor.EndpointMetadata.Any(t => t is AllowAnonymousAttribute))
             {
                 await base.OnActionExecutionAsync(context, next);
                 return;

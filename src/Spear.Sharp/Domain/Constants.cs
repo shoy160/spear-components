@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using Acb.Core.Helper;
+﻿using Acb.Core.Helper;
 using Spear.Sharp.Contracts.Dtos.Database;
 using Spear.Sharp.Contracts.Enums;
+using System.Linq;
 using System.Text;
 
 namespace Spear.Sharp.Domain
@@ -26,12 +26,16 @@ namespace Spear.Sharp.Domain
         }
 
         public static string EntityCode(this TableDto table, ProviderType provider,
-            LanguageType language = LanguageType.CSharp, bool isNaming = true)
+            LanguageType language = LanguageType.CSharp, NamingType type = NamingType.Naming)
         {
             var primary = table.PrimaryColumn;
             var sb = new StringBuilder();
             sb.AppendLine($"///<summary> {table.Desc()} </summary>");
-            sb.AppendLine($"[{(isNaming ? "Naming" : "Table")}(\"{table.Name}\")]");
+            if (type != NamingType.None)
+            {
+                sb.AppendLine($"[{(type == NamingType.Naming ? "Naming" : "Table")}(\"{table.Name}\")]");
+            }
+
             sb.AppendLine(
                 $"public class {table.ConvertedName}:BaseEntity<{primary?.LanguageType(provider, language) ?? "string"}>");
             sb.AppendLine("{");
@@ -39,9 +43,9 @@ namespace Spear.Sharp.Domain
             foreach (var column in table.Columns)
             {
                 sb.AppendLine($"\t///<summary> {column.Desc()} </summary>");
-                if (column.IsConverted)
+                if (column.IsConverted && type != NamingType.None)
                 {
-                    sb.AppendLine($"\t[{(isNaming ? "Naming" : "Column")}(\"{column.Name}\")]");
+                    sb.AppendLine($"\t[{(type == NamingType.Naming ? "Naming" : "Column")}(\"{column.Name}\")]");
                 }
 
                 sb.AppendLine(

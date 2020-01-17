@@ -57,11 +57,20 @@
             padding: 15px;
         }
 
-        caption {
+        caption,
+        caption h5 {
             font-size: 2rem;
             font-weight: 600;
             color: #333;
         }
+
+        caption {
+            position: relative;
+        }
+
+            caption h5 {
+                display: inline;
+            }
 
             caption span {
                 margin-right: 1rem;
@@ -71,6 +80,11 @@
                 font-size: 85%;
                 color: #999;
                 margin: 0 1rem 0 2rem;
+            }
+
+            caption .d-model {
+                position: absolute;
+                right: 15px;
             }
 
         .hljs-ln-numbers {
@@ -94,6 +108,21 @@
             /*color: #ff3200;*/
             font-weight: bold;
         }
+
+        .code {
+            position: relative;
+        }
+
+            .code .b-copy {
+                border-radius: 0 0 0 5px;
+                position: absolute;
+                top: 11px;
+                right: 11px;
+            }
+
+        .popover {
+            width: 88px;
+        }
     </style>
 </head>
 <body>
@@ -113,9 +142,10 @@
                 <table class="table table-striped table-hover">
                     <caption>
                         <span class="label @(table.Type == TableType.Table ? "label-info" : "label-success")">@table.Type</span>
-                        @table.Name<small>@table.Description</small>
-                        <a href="#" data-toggle="modal" data-target="#@("entityModal_" + table.Name)">Model实体</a>
+                        <h5>@table.Name</h5>
+                        <small>@table.Description</small>
                         <small><em>@table.Columns.Count()</em>个字段</small>
+                        <a href="#" data-toggle="modal" class="d-model" data-target="#@("entityModal_" + table.Name)">Model实体</a>
                     </caption>
                     <colgroup>
                         <col style="width: 18%" />
@@ -168,27 +198,70 @@
     <script src="//cdn.bootcss.com/highlight.js/9.13.1/highlight.min.js"></script>
     <script src="//cdn.bootcss.com/highlightjs-line-numbers.js/2.5.0/highlightjs-line-numbers.min.js"></script>
     <script src="//cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js"></script>
     <script>
-        (function ($, H) {
+        (function ($, H, clip) {
             $('#entityModal').on('show.bs.modal',
                 function (event) {
                     var button = $(event.relatedTarget);
                     var entity = button.data('entity');
                 });
             $(document)
-                .ready(function() {
-                    $('pre code').each(function(i, block) {
+                .ready(function () {
+                    $('pre code').each(function (i, block) {
                         H.highlightBlock(block);
                         H.lineNumbersBlock(block, { singleLine: true });
                     });
                 })
-                .delegate('.b-naming','change',
-                    function() {
-                        var val = $(this).find('option:selected').val();
-                        $('.d-naming').toggleClass('hide', val == 1);
-                        $('.d-table').toggleClass('hide', val == 0);
+                .delegate('.b-naming', 'change',
+                    function () {
+                        var val = ~~$(this).find('option:selected').val();
+                        $('.d-none').toggleClass('hide', val !== 0);
+                        $('.d-naming').toggleClass('hide', val !== 1);
+                        $('.d-table').toggleClass('hide', val !== 2);
+
                     });
-        })(jQuery, hljs)
+            var clipboard = new clip('.b-copy',
+                {
+                    //                    target:function(trigger) {
+                    //                        return trigger.nextElementSibling;
+                    //                    }
+                    text: function (trigger) {
+                        var element = trigger.nextElementSibling;
+                        var selection = window.getSelection();
+                        var range = document.createRange();
+
+                        range.selectNodeContents(element);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+
+                        var code = selection.toString();
+                        //                        console.log(code);
+                        code = code.replace(/\t\r\n/gi, '');
+                        return code;
+                    }
+                });
+
+            clipboard.on('success', function (e) {
+                //                console.info('Action:', e.action);
+                //                console.info('Text:', e.text);
+                //                console.info('Trigger:', e.trigger);
+                var popover = $(e.trigger).popover({
+                    content: '复制成功',
+                    delay: { "show": 500, "hide": 100 },
+                    trigger: 'focus',
+                    placement: 'bottom'
+                });
+                popover.popover('show');
+                e.clearSelection();
+            });
+
+            clipboard.on('error', function (e) {
+                console.error('Action:', e.action);
+                console.error('Trigger:', e.trigger);
+            });
+
+        })(jQuery, hljs, ClipboardJS)
     </script>
 </body>
 </html>

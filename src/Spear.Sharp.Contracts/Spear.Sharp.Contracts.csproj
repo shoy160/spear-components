@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.6.7" />
+    <PackageReference Include="Acb.Core" Version="1.8.4" />
   </ItemGroup>
 
 </Project>
