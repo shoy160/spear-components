@@ -1,5 +1,5 @@
-﻿using Acb.WebApi;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Acb.WebApi;
 
 namespace Spear.Sharp
 {
@@ -7,6 +7,7 @@ namespace Spear.Sharp
     {
         public static async Task Main(string[] args)
         {
+            Builder += UseIIS;
             await Start(args);
         }
     }

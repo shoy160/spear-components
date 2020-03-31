@@ -1,9 +1,9 @@
-﻿using Acb.Core;
+﻿using System.IO;
+using System.Linq;
+using Acb.Core;
 using Acb.Core.Helper;
 using Acb.Core.Logging;
 using Spear.Sharp.Contracts.Enums;
-using System.IO;
-using System.Linq;
 
 namespace Spear.Sharp.Business.Database
 {
@@ -14,8 +14,8 @@ namespace Spear.Sharp.Business.Database
         private DbTypeConverter()
         {
             _logger = LogManager.Logger<DbTypeConverter>();
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/config/DbTypeMaps.xml");
-            _typeMap = XmlHelper.XmlDeserialize<DbTypeMap>(path);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "config", "DbTypeMaps.xml");
+            _typeMap = XmlHelper.XmlDeserializeFromPath(path, new DbTypeMap());
         }
 
         public static DbTypeConverter Instance =>

@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <StartupObject>Spear.Sharp.Program</StartupObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,8 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.8.4" />
-    <PackageReference Include="Acb.WebApi" Version="1.8.4" />
+    <PackageReference Include="Acb.WebApi" Version="1.8.11" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Redis" Version="1.1.5" />
   </ItemGroup>
@@ -51,6 +52,9 @@
 
   <ItemGroup>
     <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\config\DbTypeMaps.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
