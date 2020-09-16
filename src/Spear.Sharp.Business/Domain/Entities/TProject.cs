@@ -5,11 +5,11 @@ using System;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> t_project </summary>
-    [Naming("t_project")]
-    public class TProject : BaseEntity<Guid>
+    [Naming("t_project", NamingType = NamingType.UrlCase)]
+    public class TProject : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 项目名称 </summary>
         public string Name { get; set; }

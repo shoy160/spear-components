@@ -5,14 +5,14 @@ using System;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> t_job_trigger </summary>
-    [Naming("t_job_trigger")]
-    public class TJobTrigger : BaseEntity<Guid>
+    [Naming("t_job_trigger", NamingType = NamingType.UrlCase)]
+    public class TJobTrigger : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 任务ID </summary>
-        public Guid JobId { get; set; }
+        public string JobId { get; set; }
 
         ///<summary> 触发器类型 </summary>
         public byte Type { get; set; }

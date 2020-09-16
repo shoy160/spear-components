@@ -32,14 +32,14 @@ namespace Spear.Sharp.Business
         public async Task<JobDto> CreateAsync(JobInputDto inputDto)
         {
             var dto = inputDto.MapTo<JobDto>();
-            dto.Id = dto.Detail.Id = IdentityHelper.NewSequentialGuid();
+            dto.Id = dto.Detail.Id = IdentityHelper.Guid32;
             dto.CreationTime = Clock.Now;
             dto.Status = JobStatus.Disabled;
             var result = await _repository.InsertAsync(dto);
             return result > 0 ? dto : null;
         }
 
-        public async Task<int> UpdateAsync(Guid id, JobInputDto inputDto)
+        public async Task<int> UpdateAsync(string id, JobInputDto inputDto)
         {
             var dto = inputDto.MapTo<JobDto>();
             dto.Id = id;
@@ -69,22 +69,22 @@ namespace Spear.Sharp.Business
             return jobs;
         }
 
-        public Task<int> UpdateStatusAsync(Guid jobId, JobStatus status)
+        public Task<int> UpdateStatusAsync(string jobId, JobStatus status)
         {
             return _repository.UpdateStatusAsync(jobId, status);
         }
 
-        public Task<JobDto> GetAsync(Guid jobId)
+        public Task<JobDto> GetAsync(string jobId)
         {
             return _repository.QueryByIdAsync(jobId);
         }
 
-        public Task<int> RemoveAsync(Guid jobId)
+        public Task<int> RemoveAsync(string jobId)
         {
             return _repository.UpdateStatusAsync(jobId, JobStatus.Delete);
         }
 
-        public async Task<HttpDetailDto> GetHttpDetailAsync(Guid jobId)
+        public async Task<HttpDetailDto> GetHttpDetailAsync(string jobId)
         {
             var model = await _repository.QueryHttpDetailByIdAsync(jobId);
             var dto = model.MapTo<HttpDetailDto>();
@@ -93,11 +93,11 @@ namespace Spear.Sharp.Business
             return dto;
         }
 
-        public async Task<IDictionary<Guid, HttpDetailDto>> GetHttpDetailsAsync(List<Guid> jobIds)
+        public async Task<IDictionary<string, HttpDetailDto>> GetHttpDetailsAsync(List<string> jobIds)
         {
             jobIds = jobIds.Distinct().ToList();
             var models = (await _repository.QueryHttpDetailsAsync(jobIds)).ToList();
-            var dtos = new Dictionary<Guid, HttpDetailDto>();
+            var dtos = new Dictionary<string, HttpDetailDto>();
             foreach (var model in models)
             {
                 var dto = model.MapTo<HttpDetailDto>();
@@ -109,41 +109,41 @@ namespace Spear.Sharp.Business
             return dtos;
         }
 
-        public async Task<List<TriggerDto>> GetTriggersAsync(Guid jobId)
+        public async Task<List<TriggerDto>> GetTriggersAsync(string jobId)
         {
             var dto = await _triggerRepository.QueryByJobIdAsync(jobId);
             return (dto ?? new List<TriggerDto>()).ToList();
         }
 
-        public async Task<TriggerDto> GetTriggerAsync(Guid triggerId)
+        public async Task<TriggerDto> GetTriggerAsync(string triggerId)
         {
             var model = await _triggerRepository.QueryByIdAsync(triggerId);
             return model.MapTo<TriggerDto>();
         }
 
-        public Task<int> CreateTriggerAsync(Guid jobId, TriggerInputDto inputDto)
+        public Task<int> CreateTriggerAsync(string jobId, TriggerInputDto inputDto)
         {
             var model = inputDto.MapTo<TJobTrigger>();
-            model.Id = IdentityHelper.NewSequentialGuid();
+            model.Id = IdentityHelper.Guid32;
             model.Status = (byte)TriggerStatus.Disable;
             model.JobId = jobId;
             model.CreateTime = Clock.Now;
             return _triggerRepository.InsertAsync(model);
         }
 
-        public Task<int> UpdateTriggerAsync(Guid triggerId, TriggerInputDto inputDto)
+        public Task<int> UpdateTriggerAsync(string triggerId, TriggerInputDto inputDto)
         {
             var model = inputDto.MapTo<TJobTrigger>();
             model.Id = triggerId;
             return _triggerRepository.UpdateAsync(model);
         }
 
-        public Task<int> UpdateTriggerStatusAsync(Guid triggerId, TriggerStatus status)
+        public Task<int> UpdateTriggerStatusAsync(string triggerId, TriggerStatus status)
         {
             return _triggerRepository.UpdateStatusAsync(triggerId, status);
         }
 
-        public Task<IDictionary<Guid, List<TriggerDto>>> GetTriggersAsync(List<Guid> jobIds)
+        public Task<IDictionary<string, List<TriggerDto>>> GetTriggersAsync(List<string> jobIds)
         {
             return _triggerRepository.QueryByJobIdsAsync(jobIds);
         }
@@ -154,7 +154,7 @@ namespace Spear.Sharp.Business
             return _recordRepository.InsertAsync(model);
         }
 
-        public Task<PagedList<JobRecordDto>> RecordsAsync(Guid jobId, Guid? triggerId = null, int page = 1, int size = 10)
+        public Task<PagedList<JobRecordDto>> RecordsAsync(string jobId, string triggerId = null, int page = 1, int size = 10)
         {
             return _recordRepository.QueryPagedByJobIdAsync(jobId, triggerId, page, size);
         }

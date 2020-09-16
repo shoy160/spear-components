@@ -6,7 +6,7 @@ namespace Spear.Sharp.ViewModels
 {
     public class VDatabase
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         ///<summary> 名称 </summary>
         public string Name { get; set; }
 

@@ -30,9 +30,9 @@ namespace Spear.Sharp.Business.Scheduler
         {
             var record = new JobRecordDto
             {
-                Id = IdentityHelper.NewSequentialGuid(),
+                Id = IdentityHelper.Guid32,
                 StartTime = Clock.Now,
-                TriggerId = Guid.Parse(context.Trigger.Key.Name)
+                TriggerId = context.Trigger.Key.Name
             };
             try
             {

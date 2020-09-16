@@ -27,9 +27,9 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询项目所有配置名 </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> QueryNamesAsync(Guid projectId)
+        public async Task<IEnumerable<string>> QueryNamesAsync(string projectId)
         {
-            const string sql = "SELECT [Name] FROM [t_config] WHERE [ProjectId]=@projectId AND [Status]=0 GROUP BY [Name]";
+            const string sql = "SELECT [name] FROM [t_config] WHERE [project_id]=@projectId AND [status]=0 GROUP BY [name]";
 
             return await Connection.QueryAsync<string>(Connection.FormatSql(sql), new { projectId });
         }
@@ -39,10 +39,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="module"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        public async Task<string> QueryByModuleAsync(Guid projectId, string module, string env = null)
+        public async Task<string> QueryByModuleAsync(string projectId, string module, string env = null)
         {
             const string sql =
-                "SELECT [Content] FROM [t_config] WHERE [Status]=0 AND [ProjectId]=@projectId AND [Name]=@name AND ([Mode]=@mode OR [Mode] IS NULL) ORDER BY [Mode]";
+                "SELECT [content] FROM [t_config] WHERE [status]=0 AND [project_id]=@projectId AND [name]=@name AND ([mode]=@mode OR [mode] IS NULL) ORDER BY [mode]";
 
             using (var conn = GetConnection())
                 return await conn.QueryFirstOrDefaultAsync<string>(Connection.FormatSql(sql), new
@@ -58,10 +58,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="module"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        public async Task<string> QueryVersionAsync(Guid projectId, string module, string env = null)
+        public async Task<string> QueryVersionAsync(string projectId, string module, string env = null)
         {
             const string sql =
-                "SELECT [Md5] FROM [t_config] WHERE [Status]=0 AND [ProjectId]=@projectId AND [Name]=@name AND [Status]=0 AND ([Mode]=@mode OR [Mode] IS NULL) ORDER BY [Mode]";
+                "SELECT [md5] FROM [t_config] WHERE [status]=0 AND [project_id]=@projectId AND [name]=@name AND [status]=0 AND ([mode]=@mode OR [mode] IS NULL) ORDER BY [mode]";
             using (var conn = GetConnection())
             {
                 return await conn.QueryFirstOrDefaultAsync<string>(conn.FormatSql(sql), new
@@ -80,10 +80,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public async Task<PagedList<TConfig>> QueryHistoryAsync(Guid projectId, string module, string env = null, int page = 1, int size = 10)
+        public async Task<PagedList<TConfig>> QueryHistoryAsync(string projectId, string module, string env = null, int page = 1, int size = 10)
         {
-            const string sql =
-                "SELECT * FROM [t_config] WHERE [Status]=1 AND [ProjectId]=@projectId AND [Name]=@name AND [Mode]=@mode ORDER BY [Timestamp] DESC";
+            string sql =
+                Select("[status]=1 AND [project_id]=@projectId AND [name]=@name AND [mode]=@mode ORDER BY [timestamp] DESC");
 
             return await Connection.PagedListAsync<TConfig>(sql, page, size, new { projectId, name = module, mode = env });
         }
@@ -91,10 +91,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 还原历史版本 </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<TConfig> RecoveryAsync(Guid id)
+        public async Task<TConfig> RecoveryAsync(string id)
         {
-            //更新之前版本为历史版本
-            const string updateSql = "UPDATE [t_config] SET [Status]=1 WHERE [ProjectId]=@projectId AND [Name]=@name AND [Mode]=@mode AND [Status]=0";
+            //更新之前版本为历史版本            
+            const string updateSql = "UPDATE [t_config] SET [status]=1 WHERE [project_id]=@projectId AND [name]=@name AND [mode]=@mode AND [status]=0";
             return await Transaction(async () =>
             {
                 var history = await Connection.QueryByIdAsync<TConfig>(id);
@@ -119,7 +119,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <returns></returns>
         public async Task<int> UpdateAsync(TConfig model)
         {
-            model.Id = IdentityHelper.NewSequentialGuid();
+            model.Id = IdentityHelper.Guid32;
             model.Timestamp = Clock.Now;
             model.Md5 = model.Content.Md5();
             var version = await QueryVersionAsync(model.ProjectId, model.Name, model.Mode);
@@ -138,10 +138,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="projectId"></param>
         /// <param name="module"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> QueryModesAsync(Guid projectId, string module)
+        public async Task<IEnumerable<string>> QueryModesAsync(string projectId, string module)
         {
             const string sql =
-                "SELECT [Mode] FROM [t_config] WHERE [Status=@status AND [ProjectId]=@projectId AND [Name]=@module AND [Mode] IS NOT NULL";
+                "SELECT [mode] FROM [t_config] WHERE [status]=@status AND [project_id]=@projectId AND [name]=@module AND [mode] IS NOT NULL";
             var fsql = Connection.FormatSql(sql);
             return await Connection.QueryAsync<string>(fsql, new { projectId, module, status = ConfigStatus.Normal });
         }
@@ -151,18 +151,18 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="module"></param>
         /// <param name="env"></param>
         /// <returns></returns>
-        public async Task<int> DeleteByModuleAsync(Guid projectId, string module, string env)
+        public async Task<int> DeleteByModuleAsync(string projectId, string module, string env)
         {
             //更新之前版本为历史版本
             SQL updateSql =
-                "UPDATE [t_config] SET [Status]=1 WHERE [ProjectId]=@projectId AND [Name]=@name AND [Status]=0";
+                "UPDATE [t_config] SET [status]=1 WHERE [project_id]=@projectId AND [name]=@name AND [status]=0";
             if (string.IsNullOrWhiteSpace(env))
             {
-                updateSql += "AND [Mode] IS NULL";
+                updateSql += "AND [mode] IS NULL";
             }
             else
             {
-                updateSql += "AND [Mode]=@mode";
+                updateSql += "AND [mode]=@mode";
             }
 
             var sql = Connection.FormatSql(updateSql.ToString());

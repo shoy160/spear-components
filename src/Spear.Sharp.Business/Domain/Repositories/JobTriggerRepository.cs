@@ -17,9 +17,9 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询触发器 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TriggerDto>> QueryByJobIdAsync(Guid jobId)
+        public async Task<IEnumerable<TriggerDto>> QueryByJobIdAsync(string jobId)
         {
-            const string sql = "SELECT * FROM [t_job_trigger] WHERE [JobId] = @jobId AND [Status] <> 4 ORDER BY [CreateTime]";
+            string sql = Select("[job_id] = @jobId AND [status] <> 4 ORDER BY [create_time]");
             var fmtSql = Connection.FormatSql(sql);
             return await Connection.QueryAsync<TriggerDto>(fmtSql, new { jobId });
         }
@@ -27,9 +27,9 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询触发器 </summary>
         /// <param name="jobIds"></param>
         /// <returns></returns>
-        public async Task<IDictionary<Guid, List<TriggerDto>>> QueryByJobIdsAsync(IEnumerable<Guid> jobIds)
+        public async Task<IDictionary<string, List<TriggerDto>>> QueryByJobIdsAsync(IEnumerable<string> jobIds)
         {
-            const string sql = "SELECT * FROM [t_job_trigger] WHERE [JobId] = any(:jobIds) AND [Status] <> 4";
+            string sql = Select("[job_id] in @jobIds AND [status] <> 4");
             var list = await Connection.QueryAsync<TriggerDto>(Connection.FormatSql(sql),
                 new { jobIds = jobIds.ToArray() });
             return list.GroupBy(t => t.JobId).ToDictionary(k => k.Key, v => v.ToList());
@@ -45,7 +45,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 }, Trans);
         }
 
-        public Task<int> UpdateStatusAsync(Guid triggerId, TriggerStatus status)
+        public Task<int> UpdateStatusAsync(string triggerId, TriggerStatus status)
         {
             return Connection.UpdateAsync(new TJobTrigger
             {

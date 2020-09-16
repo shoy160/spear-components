@@ -5,9 +5,9 @@ namespace Spear.Sharp.Contracts.Dtos.Job
 {
     public class JobRecordDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         /// <summary> 任务ID </summary>
-        public Guid JobId { get; set; }
+        public string JobId { get; set; }
         /// <summary> 状态 </summary>
         public RecordStatus Status { get; set; }
         /// <summary> 开始时间 </summary>
@@ -20,6 +20,6 @@ namespace Spear.Sharp.Contracts.Dtos.Job
         public int ResultCode { get; set; }
         /// <summary> 备注 </summary>
         public string Remark { get; set; }
-        public Guid? TriggerId { get; set; }
+        public string TriggerId { get; set; }
     }
 }

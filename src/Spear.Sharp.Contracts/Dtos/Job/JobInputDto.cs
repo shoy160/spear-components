@@ -15,7 +15,7 @@ namespace Spear.Sharp.Contracts.Dtos.Job
         /// <summary> 类型:0,http </summary>
         public JobType Type { get; set; }
         /// <summary> 项目ID </summary>
-        public Guid? ProjectId { get; set; }
+        public string ProjectId { get; set; }
         /// <summary> 任务详情 </summary>
         public HttpDetailDto Detail { get; set; }
     }

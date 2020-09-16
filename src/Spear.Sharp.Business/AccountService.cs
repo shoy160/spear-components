@@ -31,7 +31,7 @@ namespace Spear.Sharp.Business
             if (await _repository.ExistsAccountAsync(inputDto.Account))
                 throw new BusiException("登录帐号已存在");
             var model = inputDto.MapTo<TAccount>();
-            model.Id = IdentityHelper.NewSequentialGuid();
+            model.Id = IdentityHelper.Guid32;
             model.PasswordSalt = IdentityHelper.Guid16;
             model.Password = $"{model.Password},{model.PasswordSalt}".Md5();
             model.CreateTime = Clock.Now;
@@ -48,7 +48,7 @@ namespace Spear.Sharp.Business
                 throw new BusiException("登录帐号不存在");
             var record = new TAccountRecord
             {
-                Id = IdentityHelper.NewSequentialGuid(),
+                Id = IdentityHelper.Guid32,
                 AccountId = model.Id,
                 CreateTime = Clock.Now,
                 CreateIp = AcbHttpContext.ClientIp,
@@ -71,14 +71,14 @@ namespace Spear.Sharp.Business
             return model.MapTo<AccountDto>();
         }
 
-        public Task<int> UpdateAsync(Guid id, AccountInputDto inputDto)
+        public Task<int> UpdateAsync(string id, AccountInputDto inputDto)
         {
             var model = inputDto.MapTo<TAccount>();
             model.Id = id;
             return _repository.UpdateAsync(model);
         }
 
-        public async Task<PagedList<AccountRecordDto>> LoginRecordsAsync(Guid id, int page = 1, int size = 10)
+        public async Task<PagedList<AccountRecordDto>> LoginRecordsAsync(string id, int page = 1, int size = 10)
         {
             var paged = await _recordRepository.QueryPagedListAsync(id, page, size);
             return paged.MapPagedList<AccountRecordDto, TAccountRecord>();

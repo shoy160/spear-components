@@ -14,7 +14,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
         public async Task<bool> ExistsAccountAsync(string account)
         {
             using (var conn = GetConnection())
-                return await conn.ExistsWhereAsync<TAccount>("[Account]=@account", new { account });
+                return await conn.ExistsWhereAsync<TAccount>("[account]=@account", new { account });
         }
 
         /// <summary> 查询账号 </summary>

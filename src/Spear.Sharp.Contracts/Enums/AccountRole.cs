@@ -3,6 +3,6 @@
     public enum AccountRole : byte
     {
         Project = 1 << 0,
-        Admin = 1 << 8 - 1
+        Admin = 127
     }
 }

@@ -20,8 +20,8 @@ namespace Spear.Sharp.Contracts
         /// <returns></returns>
         Task<AccountDto> LoginAsync(string account, string password);
 
-        Task<int> UpdateAsync(Guid id, AccountInputDto inputDto);
+        Task<int> UpdateAsync(string id, AccountInputDto inputDto);
 
-        Task<PagedList<AccountRecordDto>> LoginRecordsAsync(Guid id, int page = 1, int size = 10);
+        Task<PagedList<AccountRecordDto>> LoginRecordsAsync(string id, int page = 1, int size = 10);
     }
 }

@@ -16,7 +16,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <returns></returns>
         public async Task<int> InsertAsync(TProject model)
         {
-            model.Id = IdentityHelper.NewSequentialGuid();
+            model.Id = IdentityHelper.Guid32;
             if (string.IsNullOrWhiteSpace(model.Code))
             {
                 var count = await Connection.CountWhereAsync<TProject>() + 1;

@@ -6,7 +6,7 @@ namespace Spear.Sharp.ViewModels.Jobs
 {
     public class VTrigger
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         /// <summary> 触发器类型 </summary>
         public TriggerType Type { get; set; }
         /// <summary> 类型描述 </summary>

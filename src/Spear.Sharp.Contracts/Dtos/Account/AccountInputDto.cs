@@ -21,6 +21,6 @@ namespace Spear.Sharp.Contracts.Dtos.Account
         public string Password { get; set; }
 
         ///<summary> 项目ID </summary>
-        public Guid? ProjectId { get; set; }
+        public string ProjectId { get; set; }
     }
 }

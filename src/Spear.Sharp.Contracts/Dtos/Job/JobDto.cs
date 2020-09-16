@@ -5,7 +5,7 @@ namespace Spear.Sharp.Contracts.Dtos.Job
 {
     public class JobDto : JobInputDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         /// <summary> 状态 </summary>
         public JobStatus Status { get; set; }
         /// <summary> 创建时间 </summary>

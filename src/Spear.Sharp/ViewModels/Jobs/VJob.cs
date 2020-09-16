@@ -7,7 +7,7 @@ namespace Spear.Sharp.ViewModels.Jobs
 {
     public class VJob
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         /// <summary> 任务名 </summary>
         public string Name { get; set; }
         /// <summary> 组名 </summary>

@@ -5,11 +5,11 @@ using Acb.Core.Serialize;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> 帐号表 </summary>
-    [Naming("t_account")]
-    public class TAccount : BaseEntity<Guid>
+    [Naming("t_account", NamingType = NamingType.UrlCase)]
+    public class TAccount : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 帐号 </summary>
         public string Account { get; set; }
@@ -36,6 +36,6 @@ namespace Spear.Sharp.Business.Domain.Entities
         public DateTime? LastLoginTime { get; set; }
 
         ///<summary> 项目ID </summary>
-        public Guid? ProjectId { get; set; }
+        public string ProjectId { get; set; }
     }
 }

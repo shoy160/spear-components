@@ -32,7 +32,7 @@ namespace Spear.Sharp.Hubs
         }
 
         /// <summary> 项目ID </summary>
-        protected Guid? ProjectId
+        protected string ProjectId
         {
             get
             {

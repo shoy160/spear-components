@@ -40,7 +40,7 @@ namespace Spear.Sharp.Controllers
         private ProjectDto _project;
 
         /// <summary> 项目ID </summary>
-        protected Guid ProjectId => Project.Id;
+        protected string ProjectId => Project.Id;
 
         /// <summary> 项目信息 </summary>
         protected ProjectDto Project

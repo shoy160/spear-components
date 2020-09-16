@@ -6,7 +6,7 @@ namespace Spear.Sharp.ViewModels.Jobs
 {
     public class VJobRecord
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         /// <summary> 状态 </summary>
         public RecordStatus Status { get; set; }
         /// <summary> 状态描述 </summary>

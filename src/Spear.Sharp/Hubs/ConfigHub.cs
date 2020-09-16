@@ -1,4 +1,5 @@
 ﻿using Acb.Core.Dependency;
+using Acb.Core.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Spear.Sharp.Contracts;
 using System.Collections.Generic;
@@ -23,14 +24,14 @@ namespace Spear.Sharp.Hubs
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"{Code}_{mode}_{env}");
             }
 
-            if (ProjectId.HasValue)
+            if (ProjectId.IsNotNullOrEmpty())
             {
                 using var scope = CurrentIocManager.BeginLifetimeScope();
                 var contract = scope.Resolve<IConfigContract>();
                 var dict = new Dictionary<string, object>();
                 foreach (var module in modules)
                 {
-                    var config = await contract.GetAsync(ProjectId.Value, module, env);
+                    var config = await contract.GetAsync(ProjectId, module, env);
                     dict.Add(module, config);
                 }
 

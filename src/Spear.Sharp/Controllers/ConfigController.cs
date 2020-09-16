@@ -133,7 +133,7 @@ namespace Spear.Sharp.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPut("history/{id}")]
-        public async Task<DResult> RecoveryHistory(Guid id)
+        public async Task<DResult> RecoveryHistory(string id)
         {
             var result = await _contract.RecoveryAsync(id);
             if (result == null)
@@ -146,7 +146,7 @@ namespace Spear.Sharp.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("history/{id}")]
-        public async Task<DResult> RemoveHistory(Guid id)
+        public async Task<DResult> RemoveHistory(string id)
         {
             var dto = await _contract.DetailAsync(id);
             if (dto == null)

@@ -41,8 +41,8 @@ namespace Spear.Sharp.Controllers
         /// <param name="jobId"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [HttpPut("{jobId:guid}")]
-        public async Task<DResult> ModifyJob(Guid jobId, [FromBody]JobInputDto dto)
+        [HttpPut("{jobId}")]
+        public async Task<DResult> ModifyJob(string jobId, [FromBody]JobInputDto dto)
         {
             var result = await _contract.UpdateAsync(jobId, dto);
             return FromResult(result, "修改任务失败");
@@ -85,8 +85,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 暂停任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        [HttpPut("pause/{jobId:guid}")]
-        public async Task<DResult> PauseJob(Guid jobId)
+        [HttpPut("pause/{jobId}")]
+        public async Task<DResult> PauseJob(string jobId)
         {
             var result = await _contract.UpdateStatusAsync(jobId, JobStatus.Disabled);
             if (result > 0)
@@ -97,8 +97,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 恢复运行暂停的任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        [HttpPut("resume/{jobId:guid}")]
-        public async Task<DResult> ResumeJob(Guid jobId)
+        [HttpPut("resume/{jobId}")]
+        public async Task<DResult> ResumeJob(string jobId)
         {
             var code = await _contract.UpdateStatusAsync(jobId, JobStatus.Enabled);
             if (code > 0)
@@ -111,8 +111,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 删除任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        [HttpDelete("{jobId:guid}")]
-        public async Task<DResult> RemoveJob(Guid jobId)
+        [HttpDelete("{jobId}")]
+        public async Task<DResult> RemoveJob(string jobId)
         {
             var result = await _contract.RemoveAsync(jobId);
             if (result > 0)
@@ -125,8 +125,8 @@ namespace Spear.Sharp.Controllers
 
         /// <summary> 查询任务 </summary>
         /// <returns></returns>
-        [HttpGet("{jobId:guid}")]
-        public async Task<DResult<JobDto>> QueryJob(Guid jobId)
+        [HttpGet("{jobId}")]
+        public async Task<DResult<JobDto>> QueryJob(string jobId)
         {
             var dto = await _contract.GetAsync(jobId);
             return DResult.Succ(dto);
@@ -135,8 +135,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 立即执行 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        [HttpPost("start/{jobId:guid}")]
-        public async Task<DResult> TriggerJob(Guid jobId)
+        [HttpPost("start/{jobId}")]
+        public async Task<DResult> TriggerJob(string jobId)
         {
             await _scheduler.TriggerJob(jobId);
             return Success;
@@ -148,8 +148,8 @@ namespace Spear.Sharp.Controllers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        [HttpGet("logs/{jobId:guid}")]
-        public async Task<DResults<VJobRecord>> GetJobLogs(Guid jobId, Guid? triggerId = null, int page = 1, int size = 10)
+        [HttpGet("logs/{jobId}")]
+        public async Task<DResults<VJobRecord>> GetJobLogs(string jobId, string triggerId = null, int page = 1, int size = 10)
         {
             var list = await _contract.RecordsAsync(jobId, triggerId, page, size);
             return DResult.Succ(list.MapPagedList<VJobRecord, JobRecordDto>());
@@ -159,8 +159,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 获取任务触发器 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        [HttpGet("triggers/{jobId:guid}")]
-        public async Task<DResults<VTrigger>> GetTriggers(Guid jobId)
+        [HttpGet("triggers/{jobId}")]
+        public async Task<DResults<VTrigger>> GetTriggers(string jobId)
         {
             var list = await _contract.GetTriggersAsync(jobId);
             await _scheduler.FillTriggersTime(list);
@@ -171,8 +171,8 @@ namespace Spear.Sharp.Controllers
         /// <param name="jobId"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPost("trigger/{jobId:guid}")]
-        public async Task<DResult> CreateTrigger(Guid jobId, [FromBody]VTriggerInput input)
+        [HttpPost("trigger/{jobId}")]
+        public async Task<DResult> CreateTrigger(string jobId, [FromBody]VTriggerInput input)
         {
             var dto = input.MapTo<TriggerInputDto>();
             var result = await _contract.CreateTriggerAsync(jobId, dto);
@@ -183,8 +183,8 @@ namespace Spear.Sharp.Controllers
         /// <param name="triggerId"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut("trigger/{triggerId:guid}")]
-        public async Task<DResult> UpdateTrigger(Guid triggerId, [FromBody]VTriggerInput input)
+        [HttpPut("trigger/{triggerId}")]
+        public async Task<DResult> UpdateTrigger(string triggerId, [FromBody]VTriggerInput input)
         {
             var dto = input.MapTo<TriggerInputDto>();
             var result = await _contract.UpdateTriggerAsync(triggerId, dto);
@@ -199,8 +199,8 @@ namespace Spear.Sharp.Controllers
         /// <param name="triggerId"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        [HttpPut("trigger/{triggerId:guid}/status")]
-        public async Task<DResult> UpdateTriggerStatus(Guid triggerId, TriggerStatus status)
+        [HttpPut("trigger/{triggerId}/status")]
+        public async Task<DResult> UpdateTriggerStatus(string triggerId, TriggerStatus status)
         {
             var result = await _contract.UpdateTriggerStatusAsync(triggerId, status);
             if (result > 0)
@@ -221,8 +221,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 删除触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        [HttpDelete("trigger/{triggerId:guid}")]
-        public async Task<DResult> RemoveTriggers(Guid triggerId)
+        [HttpDelete("trigger/{triggerId}")]
+        public async Task<DResult> RemoveTriggers(string triggerId)
         {
             var result = await _contract.UpdateTriggerStatusAsync(triggerId, TriggerStatus.Delete);
             if (result > 0)

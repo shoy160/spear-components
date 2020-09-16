@@ -21,7 +21,7 @@ namespace Spear.Sharp.Contracts
         /// <param name="id"></param>
         /// <param name="inputDto"></param>
         /// <returns></returns>
-        Task<int> UpdateAsync(Guid id, JobInputDto inputDto);
+        Task<int> UpdateAsync(string id, JobInputDto inputDto);
 
         /// <summary> 分页列表 </summary>
         /// <param name="inputDto"></param>
@@ -32,58 +32,58 @@ namespace Spear.Sharp.Contracts
         /// <param name="jobId"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        Task<int> UpdateStatusAsync(Guid jobId, JobStatus status);
+        Task<int> UpdateStatusAsync(string jobId, JobStatus status);
 
         /// <summary> 获取任务信息 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task<JobDto> GetAsync(Guid jobId);
+        Task<JobDto> GetAsync(string jobId);
 
         /// <summary> 删除任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task<int> RemoveAsync(Guid jobId);
+        Task<int> RemoveAsync(string jobId);
 
         /// <summary> 获取Http任务详情 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task<HttpDetailDto> GetHttpDetailAsync(Guid jobId);
+        Task<HttpDetailDto> GetHttpDetailAsync(string jobId);
 
         /// <summary> 批量获取Http任务详情 </summary>
         /// <param name="jobIds"></param>
         /// <returns></returns>
-        Task<IDictionary<Guid, HttpDetailDto>> GetHttpDetailsAsync(List<Guid> jobIds);
+        Task<IDictionary<string, HttpDetailDto>> GetHttpDetailsAsync(List<string> jobIds);
 
         /// <summary> 获取任务触发器 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task<List<TriggerDto>> GetTriggersAsync(Guid jobId);
+        Task<List<TriggerDto>> GetTriggersAsync(string jobId);
 
         /// <summary> 获取任务触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        Task<TriggerDto> GetTriggerAsync(Guid triggerId);
+        Task<TriggerDto> GetTriggerAsync(string triggerId);
         /// <summary> 创建触发器 </summary>
         /// <param name="jobId"></param>
         /// <param name="inputDto"></param>
         /// <returns></returns>
-        Task<int> CreateTriggerAsync(Guid jobId, TriggerInputDto inputDto);
+        Task<int> CreateTriggerAsync(string jobId, TriggerInputDto inputDto);
         /// <summary> 更新触发器 </summary>
         /// <param name="triggerId"></param>
         /// <param name="inputDto"></param>
         /// <returns></returns>
-        Task<int> UpdateTriggerAsync(Guid triggerId, TriggerInputDto inputDto);
+        Task<int> UpdateTriggerAsync(string triggerId, TriggerInputDto inputDto);
 
         /// <summary> 更新触发器状态 </summary>
         /// <param name="triggerId"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        Task<int> UpdateTriggerStatusAsync(Guid triggerId, TriggerStatus status);
+        Task<int> UpdateTriggerStatusAsync(string triggerId, TriggerStatus status);
 
         /// <summary> 批量获取任务触发器 </summary>
         /// <param name="jobIds"></param>
         /// <returns></returns>
-        Task<IDictionary<Guid, List<TriggerDto>>> GetTriggersAsync(List<Guid> jobIds);
+        Task<IDictionary<string, List<TriggerDto>>> GetTriggersAsync(List<string> jobIds);
 
         /// <summary> 添加任务记录 </summary>
         /// <param name="dto"></param>
@@ -96,6 +96,6 @@ namespace Spear.Sharp.Contracts
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        Task<PagedList<JobRecordDto>> RecordsAsync(Guid jobId, Guid? triggerId = null, int page = 1, int size = 10);
+        Task<PagedList<JobRecordDto>> RecordsAsync(string jobId, string triggerId = null, int page = 1, int size = 10);
     }
 }

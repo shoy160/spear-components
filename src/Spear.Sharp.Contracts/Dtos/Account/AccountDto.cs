@@ -6,7 +6,7 @@ namespace Spear.Sharp.Contracts.Dtos.Account
     public class AccountDto : DDto
     {
         ///<summary> Id </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         ///<summary> 帐号 </summary>
         public string Account { get; set; }
@@ -27,6 +27,6 @@ namespace Spear.Sharp.Contracts.Dtos.Account
         public DateTime? LastLoginTime { get; set; }
 
         ///<summary> 项目ID </summary>
-        public Guid? ProjectId { get; set; }
+        public string ProjectId { get; set; }
     }
 }

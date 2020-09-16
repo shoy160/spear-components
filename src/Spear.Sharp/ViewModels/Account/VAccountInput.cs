@@ -17,6 +17,6 @@ namespace Spear.Sharp.ViewModels.Account
         /// <summary> 角色 </summary>
         public AccountRole Role { get; set; }
         /// <summary> 项目ID </summary>
-        public Guid? Project { get; set; }
+        public string Project { get; set; }
     }
 }

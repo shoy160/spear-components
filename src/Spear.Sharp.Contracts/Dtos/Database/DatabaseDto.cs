@@ -6,7 +6,7 @@ namespace Spear.Sharp.Contracts.Dtos.Database
 {
     public class DatabaseDto : DDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         ///<summary> 名称 </summary>
         public string Name { get; set; }
         public string Code { get; set; }

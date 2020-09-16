@@ -5,11 +5,11 @@ using Acb.Core.Serialize;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> t_job </summary>
-    [Naming("t_job")]
-    public class TJob : BaseEntity<Guid>
+    [Naming("t_job", NamingType = NamingType.UrlCase)]
+    public class TJob : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 任务名称 </summary>
         public string Name { get; set; }
@@ -27,9 +27,9 @@ namespace Spear.Sharp.Business.Domain.Entities
         public string Desc { get; set; }
 
         ///<summary> 创建时间 </summary>
-        public DateTime CreationTime { get; set; }
+        public DateTime CreateTime { get; set; }
 
         ///<summary> 项目ID </summary>
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
     }
 }

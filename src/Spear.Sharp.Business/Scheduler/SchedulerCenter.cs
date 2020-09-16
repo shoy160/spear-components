@@ -62,7 +62,7 @@ namespace Spear.Sharp.Business.Scheduler
             var builder = JobBuilder.Create<JobHttp>();
             var map = new JobDataMap { { Constants.JobData, dto.Detail } };
             var jobDetail = builder
-                .WithIdentity(dto.Id.ToString("N"))
+                .WithIdentity(dto.Id)
                 .SetJobData(map)
                 .Build();
             if (trigger != null)
@@ -91,7 +91,7 @@ namespace Spear.Sharp.Business.Scheduler
         private static TriggerBuilder GetTrigger(TriggerDto trigger)
         {
             var triggerBuilder = TriggerBuilder.Create()
-                .WithIdentity(trigger.Id.ToString("N"));
+                .WithIdentity(trigger.Id);
             if (trigger.Start.HasValue)
                 triggerBuilder.StartAt(trigger.Start.Value);
             if (trigger.Expired.HasValue)
@@ -166,7 +166,7 @@ namespace Spear.Sharp.Business.Scheduler
         /// <summary> 立即执行 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task TriggerJob(Guid jobId)
+        public async Task TriggerJob(string jobId)
         {
             //立即执行
             var dto = await _jobContract.GetAsync(jobId);
@@ -176,30 +176,30 @@ namespace Spear.Sharp.Business.Scheduler
                 .WithIdentity($"{IdentityHelper.Guid32}")
                 .StartNow()
                 .Build();
-            dto.Id = Guid.NewGuid();
+            dto.Id = IdentityHelper.Guid32;
             await RunJob(dto, trigger);
         }
 
         /// <summary> 暂停触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        public async Task PauseTrigger(Guid triggerId)
+        public async Task PauseTrigger(string triggerId)
         {
-            await _scheduler.PauseTrigger(new TriggerKey(triggerId.ToString("N")));
+            await _scheduler.PauseTrigger(new TriggerKey(triggerId));
         }
 
         /// <summary> 重置触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        public async Task ResetTrigger(Guid triggerId)
+        public async Task ResetTrigger(string triggerId)
         {
-            var key = new TriggerKey(triggerId.ToString("N"));
+            var key = new TriggerKey(triggerId);
             if (!await _scheduler.CheckExists(key))
                 return;
             var dto = await _jobContract.GetTriggerAsync(triggerId);
             if (dto == null || dto.Status != TriggerStatus.Enable)
                 return;
-            var job = await _scheduler.GetJobDetail(new JobKey(dto.JobId.ToString("N")));
+            var job = await _scheduler.GetJobDetail(new JobKey(dto.JobId));
             if (job == null)
                 return;
             var triggerBuilder = GetTrigger(dto);
@@ -212,9 +212,9 @@ namespace Spear.Sharp.Business.Scheduler
         /// <summary> 恢复触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        public async Task ResumeTrigger(Guid triggerId)
+        public async Task ResumeTrigger(string triggerId)
         {
-            var triggerKey = new TriggerKey(triggerId.ToString("N"));
+            var triggerKey = new TriggerKey(triggerId);
             if (await _scheduler.CheckExists(triggerKey))
             {
                 await _scheduler.ResumeTrigger(triggerKey);
@@ -224,7 +224,7 @@ namespace Spear.Sharp.Business.Scheduler
                 var dto = await _jobContract.GetTriggerAsync(triggerId);
                 if (dto == null || dto.Status != TriggerStatus.Enable)
                     return;
-                var job = await _scheduler.GetJobDetail(new JobKey(dto.JobId.ToString("N")));
+                var job = await _scheduler.GetJobDetail(new JobKey(dto.JobId));
                 if (job == null)
                 {
                     //任务不存在则重新run
@@ -247,11 +247,11 @@ namespace Spear.Sharp.Business.Scheduler
         /// <summary> 暂停 指定的计划 </summary>
         /// <param name="jobId">任务Id</param>
         /// <returns></returns>
-        public async Task PauseJob(Guid jobId)
+        public async Task PauseJob(string jobId)
         {
             try
             {
-                var key = new JobKey(jobId.ToString("N"));
+                var key = new JobKey(jobId);
                 if (!await _scheduler.CheckExists(key))
                     return;
                 await _scheduler.PauseJob(key);
@@ -265,11 +265,11 @@ namespace Spear.Sharp.Business.Scheduler
         /// <summary> 删除 指定的计划 </summary>
         /// <param name="jobId">任务Id</param>
         /// <returns></returns>
-        public async Task RemoveJob(Guid jobId)
+        public async Task RemoveJob(string jobId)
         {
             try
             {
-                var key = new JobKey(jobId.ToString("N"));
+                var key = new JobKey(jobId);
                 await _scheduler.DeleteJob(key);
             }
             catch (Exception ex)
@@ -280,11 +280,11 @@ namespace Spear.Sharp.Business.Scheduler
 
         /// <summary> 恢复运行暂停的任务 </summary>
         /// <param name="jobId">任务Id</param>
-        public async Task ResumeJob(Guid jobId)
+        public async Task ResumeJob(string jobId)
         {
             try
             {
-                var key = new JobKey(jobId.ToString("N"));
+                var key = new JobKey(jobId);
                 if (!await _scheduler.CheckExists(key))
                 {
                     var dto = await _jobContract.GetAsync(jobId);
@@ -308,7 +308,7 @@ namespace Spear.Sharp.Business.Scheduler
         {
             foreach (var dto in dtos)
             {
-                var key = new JobKey(dto.Id.ToString("N"));
+                var key = new JobKey(dto.Id);
                 var triggers = await _scheduler.GetTriggersOfJob(key);
                 if (triggers == null || !triggers.Any())
                     continue;
@@ -333,7 +333,7 @@ namespace Spear.Sharp.Business.Scheduler
         {
             foreach (var dto in dtos)
             {
-                var key = new TriggerKey(dto.Id.ToString("N"));
+                var key = new TriggerKey(dto.Id);
                 var status = await _scheduler.GetTriggerState(key);
                 if (status != TriggerState.Normal)
                     continue;

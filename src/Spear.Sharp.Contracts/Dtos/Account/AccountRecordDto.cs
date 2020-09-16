@@ -7,7 +7,7 @@ namespace Spear.Sharp.Contracts.Dtos.Account
     public class AccountRecordDto : DDto
     {
         ///<summary> Id </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         ///<summary> 状态 </summary>
         public RecordStatus Status { get; set; }

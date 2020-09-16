@@ -23,22 +23,22 @@ namespace Spear.Sharp.Business
             _repository = repository;
         }
 
-        public Task<IEnumerable<string>> GetNamesAsync(Guid projectId)
+        public Task<IEnumerable<string>> GetNamesAsync(string projectId)
         {
             return _repository.QueryNamesAsync(projectId);
         }
 
-        public Task<IEnumerable<string>> GetEnvsAsync(Guid projectId, string module)
+        public Task<IEnumerable<string>> GetEnvsAsync(string projectId, string module)
         {
             return _repository.QueryModesAsync(projectId, module);
         }
 
-        public Task<string> GetAsync(Guid projectId, string module, string env = null)
+        public Task<string> GetAsync(string projectId, string module, string env = null)
         {
             return _repository.QueryByModuleAsync(projectId, module, env);
         }
 
-        public async Task<IDictionary<string, object>> BatchGetAsync(Guid projectId, string[] modules, string env = null)
+        public async Task<IDictionary<string, object>> BatchGetAsync(string projectId, string[] modules, string env = null)
         {
             var dict = new Dictionary<string, object>();
             foreach (var model in modules)
@@ -59,24 +59,24 @@ namespace Spear.Sharp.Business
             return dict;
         }
 
-        public async Task<ConfigDto> DetailAsync(Guid configId)
+        public async Task<ConfigDto> DetailAsync(string configId)
         {
             var model = await _repository.QueryByIdAsync(configId);
             return model.MapTo<ConfigDto>();
         }
 
-        public Task<string> GetVersionAsync(Guid projectId, string module, string env = null)
+        public Task<string> GetVersionAsync(string projectId, string module, string env = null)
         {
             return _repository.QueryVersionAsync(projectId, module, env);
         }
 
-        public async Task<PagedList<ConfigDto>> GetHistoryAsync(Guid projectId, string module, string env = null, int page = 1, int size = 10)
+        public async Task<PagedList<ConfigDto>> GetHistoryAsync(string projectId, string module, string env = null, int page = 1, int size = 10)
         {
             var models = await _repository.QueryHistoryAsync(projectId, module, env, page, size);
             return models.MapPagedList<ConfigDto, TConfig>();
         }
 
-        public async Task<ConfigDto> RecoveryAsync(Guid historyId)
+        public async Task<ConfigDto> RecoveryAsync(string historyId)
         {
             var model = await _repository.RecoveryAsync(historyId);
             return model.MapTo<ConfigDto>();
@@ -87,12 +87,12 @@ namespace Spear.Sharp.Business
             return await _repository.UpdateAsync(dto.MapTo<TConfig>());
         }
 
-        public async Task<int> RemoveAsync(Guid projectId, string module, string env)
+        public async Task<int> RemoveAsync(string projectId, string module, string env)
         {
             return await _repository.DeleteByModuleAsync(projectId, module, env);
         }
 
-        public Task<int> RemoveAsync(Guid configId)
+        public Task<int> RemoveAsync(string configId)
         {
             return _repository.DeleteAsync(configId);
         }

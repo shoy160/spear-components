@@ -5,11 +5,11 @@ using Acb.Core.Serialize;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> t_job_http </summary>
-    [Naming("t_job_http")]
-    public class TJobHttp : BaseEntity<Guid>
+    [Naming("t_job_http", NamingType = NamingType.UrlCase)]
+    public class TJobHttp : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> Url </summary>
         public string Url { get; set; }

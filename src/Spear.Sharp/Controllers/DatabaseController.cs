@@ -52,8 +52,8 @@ namespace Spear.Sharp.Controllers
         /// <param name="id"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        [HttpPut("{id:guid}")]
-        public async Task<DResult> EditAsync(Guid id, [FromBody]VDatabaseInput input)
+        [HttpPut("{id}")]
+        public async Task<DResult> EditAsync(string id, [FromBody]VDatabaseInput input)
         {
             var result = await _contract.SetAsync(id, input.Name, input.Code, input.Provider, input.ConnectionString);
             return FromResult(result, "更新数据库连接失败");
@@ -62,8 +62,8 @@ namespace Spear.Sharp.Controllers
         /// <summary> 删除数据库连接 </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id:guid}")]
-        public async Task<DResult> RemoveAsync(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<DResult> RemoveAsync(string id)
         {
             var result = await _contract.RemoveAsync(id);
             return FromResult(result, "删除失败");

@@ -25,22 +25,22 @@ namespace Spear.Sharp.Contracts
         /// <summary> 暂停任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task PauseJob(Guid jobId);
+        Task PauseJob(string jobId);
 
         /// <summary> 恢复任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task ResumeJob(Guid jobId);
+        Task ResumeJob(string jobId);
 
         /// <summary> 删除任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task RemoveJob(Guid jobId);
+        Task RemoveJob(string jobId);
 
         /// <summary> 立即执行任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        Task TriggerJob(Guid jobId);
+        Task TriggerJob(string jobId);
 
         /// <summary> 获取任务下次执行时间 </summary>
         /// <param name="jobDtos"></param>
@@ -55,16 +55,16 @@ namespace Spear.Sharp.Contracts
         /// <summary> 重置触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        Task ResetTrigger(Guid triggerId);
+        Task ResetTrigger(string triggerId);
 
         /// <summary> 暂停触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        Task PauseTrigger(Guid triggerId);
+        Task PauseTrigger(string triggerId);
 
         /// <summary> 恢复触发器 </summary>
         /// <param name="triggerId"></param>
         /// <returns></returns>
-        Task ResumeTrigger(Guid triggerId);
+        Task ResumeTrigger(string triggerId);
     }
 }

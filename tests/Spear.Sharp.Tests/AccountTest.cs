@@ -22,15 +22,6 @@ namespace Spear.Sharp.Tests
         }
 
         [TestMethod]
-        public void GuidTest()
-        {
-            var key = IdentityHelper.NewSequentialGuid().ToString("N");
-            Print(key);
-            var id = Guid.Parse(key);
-            Print(id);
-        }
-
-        [TestMethod]
         public async Task MuliQueryTest()
         {
             var rep = Resolve<AccountRepository>();
@@ -41,15 +32,28 @@ namespace Spear.Sharp.Tests
         }
 
         [TestMethod]
+        public async Task CreateProjectTest()
+        {
+            var result = await Resolve<IProjectContract>().AddAsync(new Contracts.Dtos.ProjectDto
+            {
+                Name = "test",
+                Security = SecurityEnum.None,
+                Code = "test",
+                Desc = "test"
+            });
+            Print(result);
+        }
+
+        [TestMethod]
         public async Task CreateTest()
         {
             var dto = await _contract.CreateAsync(new AccountInputDto
             {
-                Account = "icbhs",
-                Nick = "i车保护神",
+                Account = "test",
+                Nick = "Test",
                 Password = "123456",
                 Role = AccountRole.Project,
-                ProjectId = new Guid("d3e356f5-b686-c00e-e224-08d60ddebb59")
+                ProjectId = "323abe0282bfc175d05008d85a52a973"
             });
             Assert.AreNotEqual(dto, null);
             Print(dto);
@@ -66,7 +70,7 @@ namespace Spear.Sharp.Tests
         [TestMethod]
         public async Task RecordsTest()
         {
-            var list = await _contract.LoginRecordsAsync(new Guid("b5ff8cc7-2100-ced2-d13a-08d67552b2a4"), 1, 10);
+            var list = await _contract.LoginRecordsAsync(new string("b5ff8cc7-2100-ced2-d13a-08d67552b2a4"), 1, 10);
             Assert.AreNotEqual(list, null);
             Print(list);
         }

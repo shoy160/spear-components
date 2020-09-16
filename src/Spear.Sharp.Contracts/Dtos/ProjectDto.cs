@@ -7,7 +7,7 @@ namespace Spear.Sharp.Contracts.Dtos
     public class ProjectDto : DDto
     {
         ///<summary> Id </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         ///<summary> 项目名称 </summary>
         public string Name { get; set; }

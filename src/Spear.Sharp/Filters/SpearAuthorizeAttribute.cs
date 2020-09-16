@@ -64,7 +64,7 @@ namespace Spear.Sharp.Filters
             project = httpContext.GetProjectByToken();
             if (project == null)
             {
-                Forbidden();
+                //Forbidden();
                 return;
             }
             httpContext.SetProject(project);

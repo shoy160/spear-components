@@ -5,14 +5,14 @@ using Acb.Core.Serialize;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> 数据库连接表 </summary>
-    [Naming("t_database")]
-    public class TDatabase : BaseEntity<Guid>
+    [Naming("t_database", NamingType = NamingType.UrlCase)]
+    public class TDatabase : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 帐号ID </summary>
-        public Guid AccountId { get; set; }
+        public string AccountId { get; set; }
 
         ///<summary> 名称 </summary>
         public string Name { get; set; }

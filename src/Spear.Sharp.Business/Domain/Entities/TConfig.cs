@@ -5,11 +5,11 @@ using Acb.Core.Serialize;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> t_config </summary>
-    [Naming("t_config")]
-    public class TConfig : BaseEntity<Guid>
+    [Naming("t_config", NamingType = NamingType.UrlCase)]
+    public class TConfig : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 名称 </summary>
         public string Name { get; set; }
@@ -21,7 +21,7 @@ namespace Spear.Sharp.Business.Domain.Entities
         public string Content { get; set; }
 
         ///<summary> 项目编码 </summary>
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
         ///<summary> 配置校验码 </summary>
         public string Md5 { get; set; }

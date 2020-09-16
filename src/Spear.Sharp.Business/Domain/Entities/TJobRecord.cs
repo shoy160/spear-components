@@ -5,14 +5,14 @@ using System;
 namespace Spear.Sharp.Business.Domain.Entities
 {
     ///<summary> t_job_record </summary>
-    [Naming("t_job_record")]
-    public class TJobRecord : BaseEntity<Guid>
+    [Naming("t_job_record", NamingType = NamingType.UrlCase)]
+    public class TJobRecord : BaseEntity<string>
     {
         ///<summary> Id </summary>
-        public override Guid Id { get; set; }
+        public override string Id { get; set; }
 
         ///<summary> 任务ID </summary>
-        public Guid JobId { get; set; }
+        public string JobId { get; set; }
 
         ///<summary> 状态 </summary>
         public byte Status { get; set; }
@@ -29,7 +29,7 @@ namespace Spear.Sharp.Business.Domain.Entities
         ///<summary> 备注 </summary>
         public string Remark { get; set; }
         /// <summary> 触发器ID </summary>
-        public Guid? TriggerId { get; set; }
+        public string TriggerId { get; set; }
         /// <summary> 记录状态码 </summary>
         public int ResultCode { get; set; }
     }

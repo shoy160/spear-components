@@ -5,8 +5,8 @@ namespace Spear.Sharp.Contracts.Dtos.Job
 {
     public class TriggerDto : TriggerInputDto
     {
-        public Guid Id { get; set; }
-        public Guid JobId { get; set; }
+        public string Id { get; set; }
+        public string JobId { get; set; }
         /// <summary> 上次执行 </summary>
         public DateTime? PrevTime { get; set; }
         /// <summary> 下次执行 </summary>

@@ -15,7 +15,7 @@ namespace Spear.Sharp.Domain
     public class SpearTicket : ClientTicket
     {
         /// <summary> 帐号Id </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary> 帐号昵称 </summary>
         public string Nick { get; set; }
@@ -24,7 +24,7 @@ namespace Spear.Sharp.Domain
         public string Avatar { get; set; }
 
         /// <summary> 项目编码 </summary>
-        public Guid? ProjectId { get; set; }
+        public string ProjectId { get; set; }
         /// <summary> 权限 </summary>
         public byte Role { get; set; }
     }
@@ -104,7 +104,7 @@ namespace Spear.Sharp.Domain
                 return null;
             using var scope = CurrentIocManager.BeginLifetimeScope();
             var contract = scope.Resolve<IProjectContract>();
-            return contract.DetailAsync(ticket.ProjectId.Value).SyncRun();
+            return contract.DetailAsync(ticket.ProjectId).SyncRun();
         }
 
         /// <summary> 获取项目信息 </summary>

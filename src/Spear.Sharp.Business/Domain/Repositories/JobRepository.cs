@@ -1,6 +1,7 @@
 ﻿using Acb.AutoMapper;
 using Acb.Core;
 using Acb.Core.Data;
+using Acb.Core.Extensions;
 using Acb.Dapper;
 using Acb.Dapper.Domain;
 using Dapper;
@@ -20,30 +21,30 @@ namespace Spear.Sharp.Business.Domain.Repositories
     {
         /// <summary> 查询所有任务 </summary>
         /// <returns></returns>
-        public async Task<PagedList<TJob>> QueryPagedAsync(Guid? projectId = null, string keyword = null,
+        public async Task<PagedList<TJob>> QueryPagedAsync(string projectId = null, string keyword = null,
             JobStatus? status = null, int page = 1, int size = 10)
         {
-            SQL sql = "SELECT * FROM [t_job] WHERE 1=1";
-            if (projectId.HasValue)
+            SQL sql = Select("1=1");
+            if (projectId.IsNotNullOrEmpty())
             {
-                sql = (sql + "AND [ProjectId]=@projectId")["projectId", projectId];
+                sql = (sql + "AND [project_id]=@projectId")["projectId", projectId];
             }
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                sql = (sql + "AND ([Name] LIKE @keywork OR [Group] LIKE @keyword)")["keyword", $"%{keyword}%"];
+                sql = (sql + "AND ([name] LIKE @keywork OR [group] LIKE @keyword)")["keyword", $"%{keyword}%"];
             }
 
             if (status.HasValue)
             {
-                sql = (sql + "AND [Status]=@status")["status", status];
+                sql = (sql + "AND [status]=@status")["status", status];
             }
             else
             {
-                sql = (sql + "AND [Status]<>@status")["status", JobStatus.Delete];
+                sql = (sql + "AND [status]<>@status")["status", JobStatus.Delete];
             }
 
-            sql += "ORDER BY [Group],[CreationTime] DESC";
+            sql += "ORDER BY [group],[create_time] DESC";
             var sqlStr = Connection.FormatSql(sql.ToString());
             using (var conn = GetConnection())
             {
@@ -54,9 +55,9 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询Http任务 </summary>
         /// <param name="jobIds"></param>
         /// <returns></returns>
-        public Task<IEnumerable<TJobHttp>> QueryHttpDetailsAsync(IEnumerable<Guid> jobIds)
+        public Task<IEnumerable<TJobHttp>> QueryHttpDetailsAsync(IEnumerable<string> jobIds)
         {
-            const string sql = "SELECT * FROM [t_job_http] WHERE [Id] = any(:jobIds)";
+            string sql = Select<TJobHttp>("[id] in @jobIds");
             var fmtSql = Connection.FormatSql(sql);
             return Connection.QueryAsync<TJobHttp>(fmtSql, new { jobIds = jobIds.ToArray() });
         }
@@ -64,10 +65,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询触发器 </summary>
         /// <param name="jobIds"></param>
         /// <returns></returns>
-        public async Task<IDictionary<Guid, DateTime?>> QueryTimesAsync(IEnumerable<Guid> jobIds)
+        public async Task<IDictionary<string, DateTime?>> QueryTimesAsync(IEnumerable<string> jobIds)
         {
             const string sql =
-                "SELECT [JobId],MAX([StartTime]) as [PrevTime] FROM [t_job_record] WHERE [JobId] = any(:jobIds) GROUP BY [JobId]";
+                "SELECT [job_id],MAX([start_time]) as [PrevTime] FROM [t_job_record] WHERE [job_id] in @jobIds GROUP BY [job_id]";
             var list = await Connection.QueryAsync<TJobTrigger>(Connection.FormatSql(sql),
                 new { jobIds = jobIds.ToArray() });
             return list.ToDictionary(k => k.JobId, v => v.PrevTime);
@@ -76,9 +77,9 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询Http任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task<TJobHttp> QueryHttpDetailByIdAsync(Guid jobId)
+        public async Task<TJobHttp> QueryHttpDetailByIdAsync(string jobId)
         {
-            const string sql = "SELECT * FROM [t_job_http] WHERE [Id] = @jobId";
+            string sql = Select<TJobHttp>("[id] = @jobId");
             var fmtSql = Connection.FormatSql(sql);
             return await Connection.QueryFirstOrDefaultAsync<TJobHttp>(fmtSql, new { jobId });
         }
@@ -116,7 +117,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 查询任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task<JobDto> QueryByIdAsync(Guid jobId)
+        public async Task<JobDto> QueryByIdAsync(string jobId)
         {
             var dto = (await Connection.QueryByIdAsync<TJob>(jobId)).MapTo<JobDto>();
             switch (dto.Type)
@@ -174,7 +175,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="jobId"></param>
         /// <param name="status"></param>
         /// <returns></returns>
-        public Task<int> UpdateStatusAsync(Guid jobId, JobStatus status)
+        public Task<int> UpdateStatusAsync(string jobId, JobStatus status)
         {
             return Connection.UpdateAsync(new TJob
             {
@@ -186,14 +187,14 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 删除任务 </summary>
         /// <param name="jobId"></param>
         /// <returns></returns>
-        public async Task DeleteByIdAsync(Guid jobId)
+        public async Task DeleteByIdAsync(string jobId)
         {
             await Transaction(async (conn, trans) =>
             {
                 await conn.DeleteAsync<TJob>(jobId, trans: trans);
                 await conn.DeleteAsync<TJobHttp>(jobId, trans: trans);
-                await conn.DeleteAsync<TJobTrigger>(jobId, "JobId", trans);
-                await conn.DeleteAsync<TJobRecord>(jobId, "JobId", trans);
+                await conn.DeleteAsync<TJobTrigger>(jobId, "job_id", trans);
+                await conn.DeleteAsync<TJobRecord>(jobId, "job_id", trans);
             });
         }
     }

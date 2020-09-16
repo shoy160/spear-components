@@ -1,5 +1,6 @@
 ﻿using Acb.Core;
 using Acb.Core.Exceptions;
+using Acb.Core.Extensions;
 using Acb.Core.Helper;
 using Acb.Core.Timing;
 using Acb.Dapper;
@@ -23,13 +24,13 @@ namespace Spear.Sharp.Business
             _repository = repository;
         }
 
-        public async Task<int> AddAsync(Guid accountId, string name, string code, ProviderType provider, string connectionString)
+        public async Task<int> AddAsync(string accountId, string name, string code, ProviderType provider, string connectionString)
         {
             if (await _repository.ExistsCodeAsync(code))
                 throw new BusiException("编码已存在");
             var model = new TDatabase
             {
-                Id = IdentityHelper.NewSequentialGuid(),
+                Id = IdentityHelper.Guid32,
                 AccountId = accountId,
                 Name = name,
                 Code = code,
@@ -44,8 +45,8 @@ namespace Spear.Sharp.Business
         public async Task<DatabaseTablesDto> GetAsync(string key)
         {
             TDatabase model;
-            if (Guid.TryParse(key, out var id))
-                model = await _repository.QueryByIdAsync(id);
+            if (key.IsMatch("^[0-9a-zA-Z]{32}$"))
+                model = await _repository.QueryByIdAsync(key);
             else
                 model = await _repository.QueryByIdAsync(key, nameof(TDatabase.Code));
             var provider = (ProviderType)model.Provider;
@@ -61,18 +62,18 @@ namespace Spear.Sharp.Business
             };
         }
 
-        public async Task<PagedList<DatabaseDto>> PagedListAsync(Guid accountId, string keyword = null,
+        public async Task<PagedList<DatabaseDto>> PagedListAsync(string accountId, string keyword = null,
             ProviderType? type = null, int page = 1, int size = 10)
         {
             return await _repository.PagedListAsync(accountId, keyword, type, page, size);
         }
 
-        public async Task<int> SetAsync(Guid id, string name, string code, ProviderType type, string connectionString)
+        public async Task<int> SetAsync(string id, string name, string code, ProviderType type, string connectionString)
         {
             return await _repository.UpdateAsync(id, name, code, type, connectionString);
         }
 
-        public async Task<int> RemoveAsync(Guid id)
+        public async Task<int> RemoveAsync(string id)
         {
             return await _repository.UpdateStatusAsync(id, CommonStatus.Delete);
         }

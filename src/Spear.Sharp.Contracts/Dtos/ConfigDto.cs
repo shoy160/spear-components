@@ -8,7 +8,7 @@ namespace Spear.Sharp.Contracts.Dtos
     public class ConfigDto : DDto
     {
         ///<summary> Id </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         ///<summary> 名称 </summary>
         public string Name { get; set; }
@@ -22,7 +22,7 @@ namespace Spear.Sharp.Contracts.Dtos
         public object Config => JsonConvert.DeserializeObject(Content);
 
         ///<summary> 项目编码 </summary>
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
         ///<summary> 配置校验码 </summary>
         public string Md5 { get; set; }

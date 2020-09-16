@@ -25,7 +25,7 @@ namespace Spear.Sharp.Contracts
         /// <returns></returns>
         Task<ProjectDto> DetailByCodeAsync(string code);
 
-        Task<ProjectDto> DetailAsync(Guid id);
+        Task<ProjectDto> DetailAsync(string id);
 
         /// <summary> 项目列表 </summary>
         /// <param name="page"></param>

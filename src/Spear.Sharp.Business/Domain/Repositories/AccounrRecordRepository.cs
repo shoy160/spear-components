@@ -10,11 +10,10 @@ namespace Spear.Sharp.Business.Domain.Repositories
 {
     public class AccounrRecordRepository : DapperRepository<TAccountRecord>
     {
-        public Task<PagedList<TAccountRecord>> QueryPagedListAsync(Guid accountId, int page = 1, int size = 10)
+        public Task<PagedList<TAccountRecord>> QueryPagedListAsync(string accountId, int page = 1, int size = 10)
         {
-            var type = typeof(TAccountRecord);
             SQL sql =
-                $"SELECT {type.Columns()} FROM [{type.PropName()}] WHERE [AccountId]=@accountId ORDER BY [CreateTime] DESC";
+                Select("[account_id]=@accountId ORDER BY [create_time] DESC");
             return sql.PagedListAsync<TAccountRecord>(Connection, page, size, new { accountId });
         }
     }

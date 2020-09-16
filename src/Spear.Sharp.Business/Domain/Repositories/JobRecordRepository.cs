@@ -1,5 +1,6 @@
 ﻿using Acb.Core;
 using Acb.Core.Data;
+using Acb.Core.Extensions;
 using Acb.Dapper;
 using Acb.Dapper.Domain;
 using Dapper;
@@ -18,15 +19,15 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public async Task<PagedList<JobRecordDto>> QueryPagedByJobIdAsync(Guid jobId, Guid? triggerId, int page, int size)
+        public async Task<PagedList<JobRecordDto>> QueryPagedByJobIdAsync(string jobId, string triggerId, int page, int size)
         {
-            SQL sql = "SELECT * FROM [t_job_record] WHERE [JobId]=@jobId";
-            if (triggerId.HasValue)
+            SQL sql = Select("[job_id]=@jobId");
+            if (triggerId.IsNotNullOrEmpty())
             {
-                sql += "AND [TriggerId]=@triggerId";
+                sql += "AND [trigger_id]=@triggerId";
             }
 
-            sql += "ORDER BY [StartTime] DESC";
+            sql += "ORDER BY [start_time] DESC";
             using (var conn = GetConnection())
             {
                 return await sql.PagedListAsync<JobRecordDto>(conn, page, size, new { jobId, triggerId });
@@ -39,8 +40,8 @@ namespace Spear.Sharp.Business.Domain.Repositories
         public Task<int> InsertAsync(TJobRecord record)
         {
             const string sql =
-                "UPDATE [t_job_trigger] SET [PrevTime]=@start WHERE [Id] = @id;" +
-                "UPDATE [t_job_trigger] SET [Times]=[Times]-1 WHERE [Id] = @id AND [Type]=2 AND [Times]>0;";
+                "UPDATE [t_job_trigger] SET [prev_time]=@start WHERE [id] = @id;" +
+                "UPDATE [t_job_trigger] SET [times]=[times]-1 WHERE [id] = @id AND [type]=2 AND [times]>0;";
             var fmtSql = Connection.FormatSql(sql);
             return Transaction(async (conn, trans) =>
             {
