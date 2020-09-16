@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 16/09/2020 15:30:30
+ Date: 16/09/2020 18:20:27
 */
 
 SET NAMES utf8mb4;
@@ -56,7 +56,6 @@ CREATE TABLE `t_account_record`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
-
 -- ----------------------------
 -- Table structure for t_config
 -- ----------------------------
@@ -64,7 +63,7 @@ DROP TABLE IF EXISTS `t_config`;
 CREATE TABLE `t_config`  (
   `id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
-  `mode` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '模式：Dev,Test,Ready,Prod...',
+  `mode` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '模式：Dev,Test,Ready,Prod...',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '配置内容',
   `project_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '项目ID',
   `md5` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'MD5',
@@ -77,6 +76,7 @@ CREATE TABLE `t_config`  (
 -- ----------------------------
 -- Records of t_config
 -- ----------------------------
+INSERT INTO `t_config` VALUES ('232d6891d222c8924bbc08d85a6bf199', 'test', NULL, '{\"test\":123456}', '323abe0282bfc175d05008d85a52a973', '25BCF6655D266536CF0A080BEF6A1E23', NULL, 0, '2020-09-16 18:11:33');
 
 -- ----------------------------
 -- Table structure for t_database
@@ -93,6 +93,7 @@ CREATE TABLE `t_database`  (
   `create_time` datetime(0) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
 
 -- ----------------------------
 -- Table structure for t_job
@@ -113,7 +114,7 @@ CREATE TABLE `t_job`  (
 -- ----------------------------
 -- Records of t_job
 -- ----------------------------
-INSERT INTO `t_job` VALUES ('5d8b33b01a6cc5c9887008d85a52eecd', '访问百度', 'Test', 0, 0, NULL, '0001-01-01 00:00:00', '323abe0282bfc175d05008d85a52a973');
+INSERT INTO `t_job` VALUES ('5d8b33b01a6cc5c9887008d85a52eecd', '访问百度', 'Test', 0, 0, NULL, '2020-09-16 15:37:43', '323abe0282bfc175d05008d85a52a973');
 
 -- ----------------------------
 -- Table structure for t_job_http
@@ -132,28 +133,24 @@ CREATE TABLE `t_job_http`  (
 -- ----------------------------
 -- Records of t_job_http
 -- ----------------------------
-INSERT INTO `t_job_http` VALUES ('5d8b33b01a6cc5c9887008d85a52eecd', 'https://www.baidu.com/', 0, 0, NULL, NULL);
+INSERT INTO `t_job_http` VALUES ('5d8b33b01a6cc5c9887008d85a52eecd', 'http://www.baidu.com', 0, 0, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for t_job_record
 -- ----------------------------
 DROP TABLE IF EXISTS `t_job_record`;
 CREATE TABLE `t_job_record`  (
-  `id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `job_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务ID',
+  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `job_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务ID',
   `status` tinyint(4) NOT NULL COMMENT '状态',
   `start_time` datetime(0) NOT NULL COMMENT '开始时间',
   `complete_time` datetime(0) NOT NULL COMMENT '完成时间',
-  `result` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '执行结果',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `trigger_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '触发器ID',
-  `result_code` int(255) NOT NULL COMMENT '状态码',
+  `trigger_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '触发器ID',
+  `result` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '执行结果',
+  `result_code` int(11) NOT NULL COMMENT '状态码',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_job_record
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_job_trigger
@@ -177,6 +174,7 @@ CREATE TABLE `t_job_trigger`  (
 -- ----------------------------
 -- Records of t_job_trigger
 -- ----------------------------
+INSERT INTO `t_job_trigger` VALUES ('762ead2c36edcca479cb08d85a56a3ec', '5d8b33b01a6cc5c9887008d85a52eecd', 2, NULL, 0, 10, NULL, NULL, '2020-09-16 17:33:03', 1, '2020-09-16 15:39:04');
 
 -- ----------------------------
 -- Table structure for t_project
