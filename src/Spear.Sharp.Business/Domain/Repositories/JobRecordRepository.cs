@@ -1,6 +1,7 @@
 ﻿using Acb.Core;
 using Acb.Core.Data;
 using Acb.Core.Extensions;
+using Acb.Core.Logging;
 using Acb.Dapper;
 using Acb.Dapper.Domain;
 using Dapper;
@@ -37,18 +38,26 @@ namespace Spear.Sharp.Business.Domain.Repositories
         /// <summary> 添加任务日志 </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        public Task<int> InsertAsync(TJobRecord record)
+        public async Task<int> InsertAsync(TJobRecord record)
         {
             const string sql =
                 "UPDATE [t_job_trigger] SET [prev_time]=@start WHERE [id] = @id;" +
                 "UPDATE [t_job_trigger] SET [times]=[times]-1 WHERE [id] = @id AND [type]=2 AND [times]>0;";
             var fmtSql = Connection.FormatSql(sql);
-            return Transaction(async (conn, trans) =>
+            return await Transaction(async (conn, trans) =>
             {
-                var count = await conn.ExecuteAsync(fmtSql, new { id = record.TriggerId, start = record.StartTime },
-                    trans);
-                count += await conn.InsertAsync(record, trans: trans);
-                return count;
+                try
+                {
+                    var count = await conn.ExecuteAsync(fmtSql, new { id = record.TriggerId, start = record.StartTime },
+                        trans);
+                    count += await conn.InsertAsync(record, trans: trans);
+                    return count;
+                }
+                catch (Exception ex)
+                {
+                    Acb.Core.Logging.LogManager.Logger<JobRecordRepository>().Error("添加任务日志异常", ex);
+                    throw;
+                }
             });
         }
     }

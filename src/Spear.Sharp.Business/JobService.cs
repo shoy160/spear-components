@@ -33,7 +33,7 @@ namespace Spear.Sharp.Business
         {
             var dto = inputDto.MapTo<JobDto>();
             dto.Id = dto.Detail.Id = IdentityHelper.Guid32;
-            dto.CreationTime = Clock.Now;
+            dto.CreateTime = Clock.Now;
             dto.Status = JobStatus.Disabled;
             var result = await _repository.InsertAsync(dto);
             return result > 0 ? dto : null;
@@ -148,15 +148,15 @@ namespace Spear.Sharp.Business
             return _triggerRepository.QueryByJobIdsAsync(jobIds);
         }
 
-        public Task<int> AddRecordAsync(JobRecordDto dto)
+        public async Task<int> AddRecordAsync(JobRecordDto dto)
         {
             var model = dto.MapTo<TJobRecord>();
-            return _recordRepository.InsertAsync(model);
+            return await _recordRepository.InsertAsync(model);
         }
 
-        public Task<PagedList<JobRecordDto>> RecordsAsync(string jobId, string triggerId = null, int page = 1, int size = 10)
+        public async Task<PagedList<JobRecordDto>> RecordsAsync(string jobId, string triggerId = null, int page = 1, int size = 10)
         {
-            return _recordRepository.QueryPagedByJobIdAsync(jobId, triggerId, page, size);
+            return await _recordRepository.QueryPagedByJobIdAsync(jobId, triggerId, page, size);
         }
     }
 }

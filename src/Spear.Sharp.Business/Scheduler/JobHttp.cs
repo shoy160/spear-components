@@ -1,4 +1,5 @@
-﻿using Acb.Core.Helper.Http;
+﻿using Acb.Core.Extensions;
+using Acb.Core.Helper.Http;
 using Newtonsoft.Json;
 using Spear.Sharp.Contracts.Dtos.Job;
 using System;
@@ -64,7 +65,7 @@ namespace Spear.Sharp.Business.Scheduler
                 }
             }
             var resp = await HttpHelper.Instance.RequestAsync(GetHttpMethod(data.Method), req);
-            var html = await resp.Content.ReadAsStringAsync();
+            var html = await resp.ReadAsStringAsync();
             record.ResultCode = (int)resp.StatusCode;
             record.Result = html;
         }

@@ -54,7 +54,7 @@ namespace Spear.Sharp.Business.Scheduler
             {
                 record.CompleteTime = Clock.Now;
                 var repository = CurrentIocManager.Resolve<IJobContract>();
-                await repository.AddRecordAsync(record);
+                var result = await repository.AddRecordAsync(record);                
             }
         }
     }

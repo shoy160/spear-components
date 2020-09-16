@@ -68,7 +68,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
         public async Task<IDictionary<string, DateTime?>> QueryTimesAsync(IEnumerable<string> jobIds)
         {
             const string sql =
-                "SELECT [job_id],MAX([start_time]) as [PrevTime] FROM [t_job_record] WHERE [job_id] in @jobIds GROUP BY [job_id]";
+                "SELECT [job_id] AS [JobId],MAX([start_time]) as [PrevTime] FROM [t_job_record] WHERE [job_id] in @jobIds GROUP BY [job_id]";
             var list = await Connection.QueryAsync<TJobTrigger>(Connection.FormatSql(sql),
                 new { jobIds = jobIds.ToArray() });
             return list.ToDictionary(k => k.JobId, v => v.PrevTime);

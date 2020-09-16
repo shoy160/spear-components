@@ -29,7 +29,7 @@ namespace Spear.Sharp.ViewModels.Jobs
 
         public string TypeCn => Type.GetText();
         /// <summary> 创建时间 </summary>
-        public DateTime CreationTime { get; set; }
+        public DateTime CreateTime { get; set; }
         /// <summary> 任务详情 </summary>
         public HttpDetailDto Detail { get; set; }
     }

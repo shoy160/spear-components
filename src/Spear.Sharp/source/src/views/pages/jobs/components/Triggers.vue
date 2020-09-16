@@ -31,7 +31,7 @@
           {{ scope.row.type === 1 ? '--' : `${scope.row.interval}秒` }}
         </template>
       </el-table-column>
-      <el-table-column label="执行次数" prop="times">
+      <el-table-column label="剩余次数" prop="times">
         <template slot-scope="scope">
           {{ scope.row.type === 1 ? '--' : (scope.row.times >= 0 ? `${scope.row.times}次` : '永久') }}
         </template>
