@@ -2,7 +2,7 @@
 @model IEnumerable<Spear.Sharp.Contracts.Dtos.Database.TableDto>
 
 @{
-    ViewBag.Title = ViewBag.DbName + " - 数据库文档";
+    ViewBag.Title = ViewBag.Name + " - 数据库文档";
 }
 <!DOCTYPE html>
 <html>
@@ -130,6 +130,7 @@
         <header class="container">
             <span class="label label-primary">@ViewBag.Provider</span>
             @ViewBag.DbName
+            <small>@ViewBag.Name</small>
             <small><em>@Model.Count(t => t.Type == TableType.Table)</em>张表</small>
             @if (Model.Any(t => t.Type == TableType.View))
             {
@@ -209,6 +210,21 @@
                     var button = $(event.relatedTarget);
                     var entity = button.data('entity');
                 });
+            var changeType = function ($modal) {
+                if (!$modal || $modal.lenght) {
+                    return
+                }
+                var language = $modal.find('.b-language option:selected').val();
+                var type = $modal.find('.b-naming option:selected').val();
+                var cls = '.d-' + type;
+                if (language === "java") {
+                    cls += '-java';
+                }
+                console.log(cls);
+                $('.code').not(cls).addClass("hide");
+                $(cls).removeClass("hide");
+            };
+            changeType();
             $(document)
                 .ready(function () {
                     $('pre code').each(function (i, block) {
@@ -216,14 +232,14 @@
                         H.lineNumbersBlock(block, { singleLine: true });
                     });
                 })
-                .delegate('.b-naming', 'change',
-                    function () {
-                        var val = ~~$(this).find('option:selected').val();
-                        $('.d-none').toggleClass('hide', val !== 0);
-                        $('.d-naming').toggleClass('hide', val !== 1);
-                        $('.d-table').toggleClass('hide', val !== 2);
-
-                    });
+                .delegate('.b-language', 'change', function () {
+                    var $t = $(this);
+                    changeType($t.parents('.modal-dialog'));
+                    $('.b-language').val($t.val());
+                })
+                .delegate('.b-naming', 'change', function () {
+                    changeType($(this).parents('.modal-dialog'));
+                });
             var clipboard = new clip('.b-copy',
                 {
                     //                    target:function(trigger) {

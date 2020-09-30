@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Acb.Core.Domain.Dtos;
+using Acb.Core.Serialize;
 
 namespace Spear.Sharp.Contracts.Dtos.Database
 {
@@ -11,17 +12,31 @@ namespace Spear.Sharp.Contracts.Dtos.Database
         {
             get
             {
-                var arr = Name.Split('_');
-                var sb = new StringBuilder();
-                foreach (var s in arr)
-                {
-                    if (string.IsNullOrWhiteSpace(s)) continue;
-                    sb.Append(s.Substring(0, 1).ToUpper());
-                    if (s.Length > 1)
-                        sb.Append(s.Substring(1));
-                }
-                return sb.ToString();
+                return GetConvertedName();
             }
+        }
+
+        public virtual string GetConvertedName(NamingType type = NamingType.Normal, int start = 0)
+        {
+            var arr = Name.Split('_');
+            var sb = new StringBuilder();
+            var index = start > 0 ? start : 0;
+            for (var i = index; i < arr.Length; i++)
+            {
+                var name = arr[i];
+                if (string.IsNullOrWhiteSpace(name)) continue;
+                if (type == NamingType.Normal || i > index)
+                {
+                    sb.Append(name.Substring(0, 1).ToUpper());
+                    if (name.Length > 1)
+                        sb.Append(name.Substring(1));
+                }
+                else
+                {
+                    sb.Append(name);
+                }
+            }
+            return sb.ToString();
         }
 
         /// <summary> 描述 </summary>

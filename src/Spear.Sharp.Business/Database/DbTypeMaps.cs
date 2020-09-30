@@ -25,5 +25,11 @@ namespace Spear.Sharp.Business.Database
         public string Name { get; set; }
         [XmlAttribute]
         public string To { get; set; }
+
+        /// <summary>
+        /// 空类型
+        /// </summary>
+        [XmlAttribute]
+        public string ToNull { get; set; }
     }
 }

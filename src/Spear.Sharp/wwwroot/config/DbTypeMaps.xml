@@ -341,26 +341,26 @@
     <DbType Name="text" To="String"/>
     <DbType Name="varchar" To="String"/>
     <DbType Name="date" To="Date"/>
-    <DbType Name="datetime" To="Timestamp" />
+    <DbType Name="datetime" To="Date" />
     <DbType Name="time" To="Time"/>
-    <DbType Name="tinyint" To="int"/>
-    <DbType Name="smallint" To="int"/>
-    <DbType Name="int" To="int"/>
+    <DbType Name="tinyint" To="int" ToNull="Integer"/>
+    <DbType Name="smallint" To="int" ToNull="Integer"/>
+    <DbType Name="int" To="int" ToNull="Integer"/>
     <DbType Name="bigint" To="BigInteger"/>
-    <DbType Name="bit" To="boolean" />
+    <DbType Name="bit" To="boolean" ToNull="Boolean" />
     <DbType Name="char" To="String" />
-    <DbType Name="integer" To="long" />
+    <DbType Name="integer" To="long" ToNull="Long" />
     <DbType Name="decimal" To="BigDecimal" />
-    <DbType Name="float" To="float" />
-    <DbType Name="timestamp" To="Timestamp" />
+    <DbType Name="float" To="float" ToNull="Float" />
+    <DbType Name="timestamp" To="Date" />
   </Database>
   <Database DbProvider="PostgreSql"  Language="Java">
-    <DbType Name="bool" To="boolean"/>
-    <DbType Name="int2" To="int"/>
-    <DbType Name="int4" To="int"/>
-    <DbType Name="int8" To="long"/>
-    <DbType Name="float4" To="float" />
-    <DbType Name="float8" To="double" />
+    <DbType Name="bool" To="boolean" ToNull="Boolean" />
+    <DbType Name="int2" To="int" ToNull="Integer"/>
+    <DbType Name="int4" To="int" ToNull="Integer"/>
+    <DbType Name="int8" To="long" ToNull="Long"/>
+    <DbType Name="float4" To="float" ToNull="Float" />
+    <DbType Name="float8" To="double" ToNull="Double" />
     <DbType Name="numeric" To="BigDecimal"/>
     <DbType Name="money" To="BigDecimal"/>
     <DbType Name="text" To="String"/>
@@ -389,8 +389,8 @@
     <DbType Name="tsvector" To="NpgsqlTsVector" />
     <DbType Name="date" To="Date" />
     <DbType Name="interval" To="Timestamp" />
-    <DbType Name="timestamp" To="Timestamp" />
-    <DbType Name="timestamptz" To="Timestamp" />
+    <DbType Name="timestamp" To="Date" />
+    <DbType Name="timestamptz" To="Date" />
     <DbType Name="time" To="TimeSpan" />
     <DbType Name="timetz" To="Timestamp" />
     <DbType Name="bytea" To="byte[]" />
@@ -456,31 +456,31 @@
     <DbType Name="datetime2" To="Timestamp"/>
     <DbType Name="time" To="Timestamp"/>
     <DbType Name="datetimeoffset" To="Timestamp"/>
-    <DbType Name="tinyint" To="byte"/>
-    <DbType Name="smallint" To="short"/>
-    <DbType Name="int" To="int"/>
-    <DbType Name="bigint" To="long"/>
-    <DbType Name="bit" To="boolean" />
+    <DbType Name="tinyint" To="byte" ToNull="Byte"/>
+    <DbType Name="smallint" To="short" ToNull="Short"/>
+    <DbType Name="int" To="int" ToNull="Integer"/>
+    <DbType Name="bigint" To="long" ToNull="Long"/>
+    <DbType Name="bit" To="boolean" ToNull="Boolean"/>
     <DbType Name="char" To="String" />
     <DbType Name="nchar" To="String" />
     <DbType Name="uniqueide" To="UUID" />
     <DbType Name="numeric" To="BigDecimal" />
-    <DbType Name="integer" To="int" />
+    <DbType Name="integer" To="int" ToNull="Integer" />
     <DbType Name="money" To="BigDecimal" />
     <DbType Name="real" To="BigDecimal" />
     <DbType Name="blob" To="byte[]" />
     <DbType Name="ntext" To="String" />
-    <DbType Name="single" To="float" />
+    <DbType Name="single" To="float" ToNull="Float" />
     <DbType Name="smallmoney" To="BigDecimal" />
     <DbType Name="decimal" To="BigDecimal" />
     <DbType Name="bfile" To="byte[]" />
-    <DbType Name="float" To="float" />
+    <DbType Name="float" To="float" ToNull="Float" />
     <DbType Name="uniqueidentifier" To="UUID" />
     <DbType Name="text" To="String" />
     <DbType Name="binary" To="byte[]" />
     <DbType Name="number" To="BigDecimal" />
     <DbType Name="varbinary" To="byte[]" />
-    <DbType Name="boolean" To="bool" />
+    <DbType Name="boolean" To="boolean" />
     <DbType Name="long" To="byte[]" />
     <DbType Name="longtext" To="String" />
     <DbType Name="timestamp" To="Timestamp" />

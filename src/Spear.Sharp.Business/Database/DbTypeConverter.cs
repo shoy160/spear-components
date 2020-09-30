@@ -54,9 +54,20 @@ namespace Spear.Sharp.Business.Database
                 }
             }
 
-            if (lang == Contracts.Enums.LanguageType.CSharp)
+            if (lang == LanguageType.CSharp)
             {
                 return dbTypeMap.To != "string" && isNullable ? $"{dbTypeMap.To}?" : dbTypeMap.To;
+            }
+            if (lang == LanguageType.Java)
+            {
+                if (isNullable && !string.IsNullOrWhiteSpace(dbTypeMap.ToNull))
+                {
+                    return dbTypeMap.ToNull;
+                }
+                else
+                {
+                    return dbTypeMap.To;
+                }
             }
             //:todo 其他语言
             return dbTypeMap.To;

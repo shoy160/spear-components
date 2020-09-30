@@ -77,7 +77,7 @@ namespace Spear.Sharp.Controllers
         {
             try
             {
-                var dto = await _contract.GetAsync(key);
+                var dto = await _contract.GetAsync(key);                
                 ViewBag.DbName = dto.DbName;
                 ViewBag.Provider = dto.Provider;
                 ViewBag.Name = dto.Name;

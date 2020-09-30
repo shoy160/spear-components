@@ -6,7 +6,7 @@
 @{
     var provider = ViewData.GetValue<ProviderType>("Provider");
     var primary = Model.PrimaryColumn;
-    const LanguageType language = LanguageType.CSharp;
+    //const LanguageType language = LanguageType.Java;
 }
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -17,30 +17,42 @@
         <div class="modal-body">
             <div class="row" style="margin: 0 0 15px 0">
                 <div class="col-sm-offset-6 col-sm-3">
-                    <select class="form-control">
-                        <option>C#</option>
+                    <select class="form-control b-language">
+                        <option selected="selected" value="csharp">C#</option>
+                        <option value="java">Java</option>
                     </select>
                 </div>
-                <div class="col-sm-3 b-naming">
-                    <select class="form-control">
-                        <option value="0">None</option>
-                        <option value="1" selected="selected">Naming</option>
-                        <option value="2">Table</option>
-
+                <div class="col-sm-3">
+                    <select class="form-control b-naming">
+                        <option value="none">None</option>
+                        <option value="naming" selected="selected">Naming</option>
+                        <option value="table">Table</option>
                     </select>
                 </div>
             </div>
             <div class="code d-none hide">
                 <button class="btn btn-primary b-copy">Copy</button>
-                <pre><code class="cs">@Model.EntityCode(provider, language, NamingType.None)</code></pre>
+                <pre><code class="cs">@Model.EntityCode(provider, LanguageType.CSharp, NamingType.None)</code></pre>
             </div>
             <div class="code d-naming">
                 <button class="btn btn-primary b-copy">Copy</button>
-                <pre><code class="cs">@Model.EntityCode(provider)</code></pre>
+                <pre><code class="cs">@Model.EntityCode(provider, LanguageType.CSharp)</code></pre>
             </div>
             <div class="code d-table hide">
                 <button class="btn btn-primary b-copy">Copy</button>
-                <pre><code class="cs">@Model.EntityCode(provider, language, NamingType.Table)</code></pre>
+                <pre><code class="cs">@Model.EntityCode(provider, LanguageType.CSharp, NamingType.Table)</code></pre>
+            </div>
+            <div class="code d-none-java hide">
+                <button class="btn btn-primary b-copy">Copy</button>
+                <pre><code class="cs">@Model.EntityCode(provider, LanguageType.Java, NamingType.None)</code></pre>
+            </div>
+            <div class="code d-naming-java hide">
+                <button class="btn btn-primary b-copy">Copy</button>
+                <pre><code class="cs">@Model.EntityCode(provider, LanguageType.Java)</code></pre>
+            </div>
+            <div class="code d-table-java hide">
+                <button class="btn btn-primary b-copy">Copy</button>
+                <pre><code class="cs">@Model.EntityCode(provider, LanguageType.Java, NamingType.Table)</code></pre>
             </div>
         </div>
     </div>
