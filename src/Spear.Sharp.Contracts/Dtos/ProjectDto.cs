@@ -1,5 +1,5 @@
 ﻿using System;
-using Acb.Core.Domain.Dtos;
+using Spear.Core.Domain.Dtos;
 using Spear.Sharp.Contracts.Enums;
 
 namespace Spear.Sharp.Contracts.Dtos

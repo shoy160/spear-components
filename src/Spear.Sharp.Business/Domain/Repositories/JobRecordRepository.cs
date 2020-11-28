@@ -1,14 +1,15 @@
-﻿using Acb.Core;
-using Acb.Core.Data;
-using Acb.Core.Extensions;
-using Acb.Core.Logging;
-using Acb.Dapper;
-using Acb.Dapper.Domain;
+﻿using Spear.Core;
+using Spear.Core.Data;
+using Spear.Core.Extensions;
+using Spear.Dapper;
+using Spear.Dapper.Domain;
 using Dapper;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Contracts.Dtos.Job;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Dependency;
 
 namespace Spear.Sharp.Business.Domain.Repositories
 {
@@ -55,7 +56,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 }
                 catch (Exception ex)
                 {
-                    Acb.Core.Logging.LogManager.Logger<JobRecordRepository>().Error("添加任务日志异常", ex);
+                    CurrentIocManager.CreateLogger<JobRecordRepository>().LogError(ex, "添加任务日志异常");
                     throw;
                 }
             });

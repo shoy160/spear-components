@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.8.6" />
+    <PackageReference Include="Spear.Core" Version="0.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.1" />
   </ItemGroup>

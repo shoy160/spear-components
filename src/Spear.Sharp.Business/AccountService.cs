@@ -1,10 +1,10 @@
-﻿using Acb.AutoMapper;
-using Acb.Core;
-using Acb.Core.Domain;
-using Acb.Core.Exceptions;
-using Acb.Core.Extensions;
-using Acb.Core.Helper;
-using Acb.Core.Timing;
+﻿using Spear.AutoMapper;
+using Spear.Core;
+using Spear.Core.Domain;
+using Spear.Core.Exceptions;
+using Spear.Core.Extensions;
+using Spear.Core.Helper;
+using Spear.Core.Timing;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Business.Domain.Repositories;
 using Spear.Sharp.Contracts;
@@ -51,8 +51,8 @@ namespace Spear.Sharp.Business
                 Id = IdentityHelper.Guid32,
                 AccountId = model.Id,
                 CreateTime = Clock.Now,
-                CreateIp = AcbHttpContext.ClientIp,
-                UserAgent = AcbHttpContext.UserAgent ?? "client"
+                //CreateIp = AcbHttpContext.ClientIp,
+                //UserAgent = AcbHttpContext.UserAgent ?? "client"
             };
             if (!string.Equals($"{password},{model.PasswordSalt}".Md5(), model.Password))
             {

@@ -1,5 +1,5 @@
-﻿using Acb.AutoMapper;
-using Acb.Core;
+﻿using Spear.AutoMapper;
+using Spear.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spear.Sharp.Contracts;
@@ -30,7 +30,7 @@ namespace Spear.Sharp.Controllers
         /// <param name="page"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        [HttpGet("")]
+        [HttpGet()]
         public async Task<DResults<VDatabase>> ListAsync(string keyword = null, ProviderType? type = null, int page = 1,
             int size = 10)
         {
@@ -42,7 +42,7 @@ namespace Spear.Sharp.Controllers
         /// <summary> 添加数据库连接 </summary>
         /// <returns></returns>
         [HttpPost("")]
-        public async Task<DResult> AddAsync([FromBody]VDatabaseInput input)
+        public async Task<DResult> AddAsync([FromBody] VDatabaseInput input)
         {
             var result = await _contract.AddAsync(Ticket.Id, input.Name, input.Code, input.Provider, input.ConnectionString);
             return FromResult(result, "添加数据库连接失败");
@@ -53,7 +53,7 @@ namespace Spear.Sharp.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<DResult> EditAsync(string id, [FromBody]VDatabaseInput input)
+        public async Task<DResult> EditAsync(string id, [FromBody] VDatabaseInput input)
         {
             var result = await _contract.SetAsync(id, input.Name, input.Code, input.Provider, input.ConnectionString);
             return FromResult(result, "更新数据库连接失败");
@@ -77,7 +77,7 @@ namespace Spear.Sharp.Controllers
         {
             try
             {
-                var dto = await _contract.GetAsync(key);                
+                var dto = await _contract.GetAsync(key);
                 ViewBag.DbName = dto.DbName;
                 ViewBag.Provider = dto.Provider;
                 ViewBag.Name = dto.Name;

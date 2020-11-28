@@ -1,6 +1,6 @@
 ﻿using System;
-using Acb.Core.Domain.Entities;
-using Acb.Core.Serialize;
+using Spear.Core.Domain.Entities;
+using Spear.Core.Serialize;
 
 namespace Spear.Sharp.Business.Domain.Entities
 {

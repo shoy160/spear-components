@@ -1,12 +1,11 @@
-﻿using Acb.Core.Dependency;
-using Acb.Core.Extensions;
-using Acb.Core.Timing;
-using Acb.WebApi;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Spear.Core.Dependency;
+using Spear.Core.Extensions;
+using Spear.Core.Timing;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos;
 using Spear.Sharp.Contracts.Enums;
-using System;
+using Spear.WebApi;
 using System.Collections.Generic;
 
 namespace Spear.Sharp.Domain
@@ -73,7 +72,7 @@ namespace Spear.Sharp.Domain
         /// <returns></returns>
         public static string GetProjectCode(this HttpContext context)
         {
-            var code = ProjectCodeKey.QueryOrForm(string.Empty);
+            var code = context.QueryOrForm(ProjectCodeKey, string.Empty);
             if (!string.IsNullOrWhiteSpace(code))
                 return code;
             if (context.Request.Headers.TryGetValue(ProjectCodeKey, out var dcode))

@@ -1,5 +1,5 @@
 ﻿using System;
-using Acb.Core.Extensions;
+using Spear.Core.Extensions;
 using Spear.Sharp.Contracts.Enums;
 
 namespace Spear.Sharp.ViewModels

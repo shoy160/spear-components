@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
-using Acb.Core;
-using Acb.Core.Helper;
-using Acb.Core.Logging;
+using Microsoft.Extensions.Logging;
+using Spear.Core;
+using Spear.Core.Dependency;
+using Spear.Core.Helper;
 using Spear.Sharp.Contracts.Enums;
 
 namespace Spear.Sharp.Business.Database
@@ -13,7 +14,7 @@ namespace Spear.Sharp.Business.Database
         private readonly ILogger _logger;
         private DbTypeConverter()
         {
-            _logger = LogManager.Logger<DbTypeConverter>();
+            _logger = CurrentIocManager.CreateLogger<DbTypeConverter>();
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "config", "DbTypeMaps.xml");
             _typeMap = XmlHelper.XmlDeserializeFromPath(path, new DbTypeMap());
         }
@@ -38,7 +39,7 @@ namespace Spear.Sharp.Business.Database
             var databaseMap = _typeMap.Databases.FirstOrDefault(m => m.DbProvider == dbProvider && m.Language == lang);
             if (databaseMap == null)
             {
-                _logger.Warn($"没有找到语言对应的映射关系:{dbProvider}->{lang}");
+                _logger.LogWarning($"没有找到语言对应的映射关系:{dbProvider}->{lang}");
             }
             else
             {
@@ -46,7 +47,7 @@ namespace Spear.Sharp.Business.Database
 
                 if (map == null)
                 {
-                    _logger.Warn($"没有找到语言对应的数据类型:{dbProvider}->{lang},{dbType}");
+                    _logger.LogWarning($"没有找到语言对应的数据类型:{dbProvider}->{lang},{dbType}");
                 }
                 else
                 {
@@ -88,13 +89,13 @@ namespace Spear.Sharp.Business.Database
             var databaseMap = _typeMap.Databases.FirstOrDefault(m => m.DbProvider == dbProvider && m.Language == lang);
             if (databaseMap == null)
             {
-                _logger.Warn($"没有找到语言对应的映射关系:{dbProvider}->{lang}");
+                _logger.LogWarning($"没有找到语言对应的映射关系:{dbProvider}->{lang}");
             }
             var map = databaseMap?.DbTypes?.FirstOrDefault(m => m.To == languageType);
 
             if (map == null)
             {
-                _logger.Warn($"没有找到语言类型对应的数据类型:{dbProvider}->{lang},{languageType}");
+                _logger.LogWarning($"没有找到语言类型对应的数据类型:{dbProvider}->{lang},{languageType}");
             }
             else
             {

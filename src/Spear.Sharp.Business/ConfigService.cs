@@ -1,7 +1,7 @@
-﻿using Acb.AutoMapper;
-using Acb.Core;
-using Acb.Core.Domain;
-using Acb.Core.Extensions;
+﻿using Spear.AutoMapper;
+using Spear.Core;
+using Spear.Core.Domain;
+using Spear.Core.Extensions;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Business.Domain.Repositories;
 using Spear.Sharp.Contracts;

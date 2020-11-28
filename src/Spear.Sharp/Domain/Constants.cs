@@ -1,5 +1,5 @@
-﻿using Acb.Core.Helper;
-using Acb.Core.Timing;
+﻿using Spear.Core.Helper;
+using Spear.Core.Timing;
 using Spear.Sharp.Contracts.Dtos.Database;
 using Spear.Sharp.Contracts.Enums;
 using System.Linq;
@@ -64,10 +64,10 @@ namespace Spear.Sharp.Domain
                 {
                     sb.AppendLine($"\t@TableField(\"{column.Name}\")");
                 }
-                var field = column.GetConvertedName(Acb.Core.Serialize.NamingType.CamelCase);
+                var field = column.GetConvertedName(Spear.Core.Serialize.NamingType.CamelCase);
                 if (type == NamingType.Naming)
                 {
-                    field = column.GetConvertedName(Acb.Core.Serialize.NamingType.CamelCase, 1);
+                    field = column.GetConvertedName(Spear.Core.Serialize.NamingType.CamelCase, 1);
                 }
                 sb.AppendLine($"\tprivate {column.LanguageType(provider, LanguageType.Java)} {field};");
 

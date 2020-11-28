@@ -1,4 +1,4 @@
-﻿using Acb.Core.Dependency;
+﻿using Spear.Core.Dependency;
 using Spear.Sharp.Contracts.Enums;
 
 namespace Spear.Sharp.Contracts.Dtos.Database

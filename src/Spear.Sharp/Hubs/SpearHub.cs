@@ -1,12 +1,12 @@
-﻿using Acb.Core;
-using Acb.Core.Extensions;
-using Acb.Core.Logging;
-using Spear.Sharp.Domain;
-using Microsoft.AspNetCore.Http.Connections.Features;
+﻿using Microsoft.AspNetCore.Http.Connections.Features;
 using Microsoft.AspNetCore.SignalR;
+using Spear.Core.Extensions;
+using Spear.Sharp.Contracts.Dtos;
+using Spear.Sharp.Domain;
 using System;
 using System.Threading.Tasks;
-using Spear.Sharp.Contracts.Dtos;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Dependency;
 
 namespace Spear.Sharp.Hubs
 {
@@ -17,7 +17,7 @@ namespace Spear.Sharp.Hubs
 
         protected SpearHub()
         {
-            Logger = LogManager.Logger<ConfigHub>();
+            Logger = CurrentIocManager.CreateLogger<ConfigHub>();
         }
 
         /// <summary> 项目编码 </summary>
@@ -56,8 +56,9 @@ namespace Spear.Sharp.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-            Logger.Info($"hub:{Context.ConnectionId} Connected,{RemoteAddress()}");
-            var code = AcbHttpContext.Current.GetProject();
+            Logger.LogInformation($"hub:{Context.ConnectionId} Connected,{RemoteAddress()}");
+            var context = CurrentIocManager.Resolve<IHttpContextFeature>()?.HttpContext;
+            var code = context.GetProject();
             if (code == null)
                 return;
             Context.Items.Add(ProjectKey, code);
@@ -70,7 +71,7 @@ namespace Spear.Sharp.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            Logger.Warn($"hub:{Context.ConnectionId} Disconnected,{RemoteAddress()},{exception.Format()}");
+            Logger.LogWarning($"hub:{Context.ConnectionId} Disconnected,{RemoteAddress()},{exception.Format()}");
             await base.OnDisconnectedAsync(exception);
         }
     }

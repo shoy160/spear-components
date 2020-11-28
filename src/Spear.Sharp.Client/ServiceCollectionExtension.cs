@@ -1,4 +1,4 @@
-﻿using Acb.Core;
+﻿using Spear.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -25,7 +25,7 @@ namespace Spear.Sharp.Client
                 {
                     await client.StartConfig(new ConfigOption
                     {
-                        Mode = Consts.Mode.ToString().ToLower(),
+                        Mode = Constants.Mode.ToString().ToLower(),
                         ConfigModules = modules
                     });
                 }

@@ -1,9 +1,9 @@
-﻿using Acb.AutoMapper;
-using Acb.Core;
-using Acb.Core.Data;
-using Acb.Core.Extensions;
-using Acb.Dapper;
-using Acb.Dapper.Domain;
+﻿using Spear.AutoMapper;
+using Spear.Core;
+using Spear.Core.Data;
+using Spear.Core.Extensions;
+using Spear.Dapper;
+using Spear.Dapper.Domain;
 using Dapper;
 using Newtonsoft.Json;
 using Spear.Sharp.Business.Domain.Entities;

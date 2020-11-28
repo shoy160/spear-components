@@ -1,4 +1,4 @@
-﻿using Acb.Core.Config;
+﻿using Spear.Core.Config;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;

@@ -1,7 +1,7 @@
-﻿using Acb.Core;
-using Acb.Core.Extensions;
-using Acb.Dapper;
-using Acb.Dapper.Domain;
+﻿using Spear.Core;
+using Spear.Core.Extensions;
+using Spear.Dapper;
+using Spear.Dapper.Domain;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Contracts.Dtos.Database;
 using Spear.Sharp.Contracts.Enums;

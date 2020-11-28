@@ -1,16 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.AutoMapper" Version="1.8.0" />
-    <PackageReference Include="Acb.Dapper" Version="1.8.3" />
-    <PackageReference Include="Acb.Dapper.MySql" Version="1.8.1" />
-    <PackageReference Include="Acb.Dapper.PostgreSql" Version="1.8.1" />
-    <PackageReference Include="Acb.Dapper.SQLite" Version="1.8.1" />
+    <PackageReference Include="Spear.AutoMapper" Version="0.2.7" />
+    <PackageReference Include="Spear.Dapper" Version="0.2.6" />
+    <PackageReference Include="Spear.Dapper.MySql" Version="0.2.6" />
+    <PackageReference Include="Spear.Dapper.PostgreSql" Version="0.2.7" />
     <PackageReference Include="Quartz" Version="3.0.7" />
+    <PackageReference Include="Spear.Dapper.SQLite" Version="0.2.7" />
   </ItemGroup>
 
   <ItemGroup>

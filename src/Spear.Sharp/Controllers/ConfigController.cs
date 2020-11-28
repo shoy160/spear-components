@@ -1,6 +1,5 @@
-﻿using Acb.Core;
-using Acb.Core.Dependency;
-using Acb.Core.Logging;
+﻿using Spear.Core;
+using Spear.Core.Dependency;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -13,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Spear.Sharp.Controllers
 {
@@ -29,7 +29,7 @@ namespace Spear.Sharp.Controllers
         {
             _contract = contract;
             _configHub = configHub;
-            _logger = LogManager.Logger<ConfigController>();
+            _logger = CurrentIocManager.CreateLogger<ConfigController>();
         }
 
         /// <summary> 通知配置更新 </summary>

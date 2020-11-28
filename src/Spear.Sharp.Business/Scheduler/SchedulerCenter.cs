@@ -1,6 +1,5 @@
-﻿using Acb.Core.Exceptions;
-using Acb.Core.Helper;
-using Acb.Core.Logging;
+﻿using Spear.Core.Exceptions;
+using Spear.Core.Helper;
 using Quartz;
 using Quartz.Impl;
 using Spear.Sharp.Business.Domain;
@@ -12,6 +11,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Dependency;
 
 namespace Spear.Sharp.Business.Scheduler
 {
@@ -23,7 +24,7 @@ namespace Spear.Sharp.Business.Scheduler
 
         public SchedulerCenter(IJobContract jobContract)
         {
-            _logger = LogManager.Logger<SchedulerCenter>();
+            _logger = CurrentIocManager.CreateLogger<SchedulerCenter>();
             _jobContract = jobContract;
         }
 
@@ -145,7 +146,7 @@ namespace Spear.Sharp.Business.Scheduler
             if (_scheduler.InStandbyMode)
             {
                 await _scheduler.Start();
-                _logger.Info("任务调度启动！");
+                _logger.LogInformation("任务调度启动！");
             }
         }
 
@@ -159,7 +160,7 @@ namespace Spear.Sharp.Business.Scheduler
             {
                 //等待任务运行完成
                 await _scheduler.Standby(); //TODO  注意：Shutdown后Start会报错，所以这里使用暂停。
-                _logger.Info("任务调度暂停！");
+                _logger.LogInformation("任务调度暂停！");
             }
         }
 
@@ -258,7 +259,7 @@ namespace Spear.Sharp.Business.Scheduler
             }
             catch (Exception ex)
             {
-                _logger.Error($"暂停任务失败！{ex.Message}", ex);
+                _logger.LogError(ex, $"暂停任务失败！{ex.Message}");
             }
         }
 
@@ -274,7 +275,7 @@ namespace Spear.Sharp.Business.Scheduler
             }
             catch (Exception ex)
             {
-                _logger.Error($"删除任务失败！{ex.Message}", ex);
+                _logger.LogError(ex, $"删除任务失败！{ex.Message}");
             }
         }
 
@@ -294,11 +295,11 @@ namespace Spear.Sharp.Business.Scheduler
                 }
                 //任务已经存在则暂停任务
                 await _scheduler.ResumeJob(key);
-                _logger.Info($"任务[{jobId}]恢复运行");
+                _logger.LogInformation($"任务[{jobId}]恢复运行");
             }
             catch (Exception ex)
             {
-                _logger.Error($"恢复任务失败！{ex.Message}", ex);
+                _logger.LogError(ex, $"恢复任务失败！{ex.Message}");
             }
         }
 

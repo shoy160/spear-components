@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Acb.Core;
-using Acb.Core.Extensions;
-using Acb.Dapper;
-using Acb.Dapper.Domain;
+using Spear.Core;
+using Spear.Core.Extensions;
+using Spear.Dapper;
+using Spear.Dapper.Domain;
 using Spear.Sharp.Business.Domain.Entities;
 
 namespace Spear.Sharp.Business.Domain.Repositories

@@ -1,15 +1,15 @@
-﻿using Acb.Core.Dependency;
-using Acb.Core.Exceptions;
-using Acb.Core.Extensions;
-using Acb.Core.Helper;
-using Acb.Core.Logging;
-using Acb.Core.Timing;
+﻿using Spear.Core.Dependency;
+using Spear.Core.Exceptions;
+using Spear.Core.Extensions;
+using Spear.Core.Helper;
+using Spear.Core.Timing;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos.Job;
 using Spear.Sharp.Contracts.Enums;
 using Quartz;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Spear.Sharp.Business.Domain;
 
 namespace Spear.Sharp.Business.Scheduler
@@ -21,7 +21,7 @@ namespace Spear.Sharp.Business.Scheduler
 
         protected JobBase()
         {
-            Logger = LogManager.Logger(typeof(JobBase<>));
+            Logger = CurrentIocManager.CreateLogger(GetType());
         }
 
         protected abstract Task ExecuteJob(T data, JobRecordDto record);
@@ -47,14 +47,14 @@ namespace Spear.Sharp.Business.Scheduler
             {
                 record.Remark = ex.Message;
                 if (!(ex is BusiException))
-                    Logger.Error(ex.Message, ex);
+                    Logger.LogError(ex, ex.Message);
                 record.Status = RecordStatus.Fail;
             }
             finally
             {
                 record.CompleteTime = Clock.Now;
                 var repository = CurrentIocManager.Resolve<IJobContract>();
-                var result = await repository.AddRecordAsync(record);                
+                var result = await repository.AddRecordAsync(record);
             }
         }
     }

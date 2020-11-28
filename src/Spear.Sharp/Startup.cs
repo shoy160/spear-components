@@ -1,5 +1,5 @@
-﻿using Acb.Core.Extensions;
-using Acb.WebApi;
+﻿using Spear.Core.Extensions;
+using Spear.WebApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -12,6 +12,10 @@ using StackExchange.Redis;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Spear.Core.Data;
+using Spear.Dapper.Mysql;
+using Spear.Dapper.PostgreSql;
+using Spear.Dapper.SQLite;
 
 namespace Spear.Sharp
 {
@@ -23,31 +27,35 @@ namespace Spear.Sharp
 
         protected override void UseServices(IServiceProvider provider)
         {
-            Task.Run(async () => { await provider.GetService<ISchedulerContract>().Start(); });
+            //Task.Run(async () => { await provider.GetService<ISchedulerContract>().Start(); });
             base.UseServices(provider);
         }
 
-        protected override void MapServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
+            DbConnectionManager.AddAdapter(new MySqlConnectionAdapter());
+            DbConnectionManager.AddAdapter(new PostgreSqlAdapter());
+            DbConnectionManager.AddAdapter(new SqliteConnectionAdapter());
             services.AddHttpClient();
-            services.AddRazorPages();
+            //services.AddRazorPages();
             services
-                .AddSignalR()
-                .AddRedis(option =>
-                {
-                    option.ConnectionFactory = async writer =>
-                    {
-                        var config = "redis:default".Config<string>();
-                        return await ConnectionMultiplexer.ConnectAsync(config, writer);
-                    };
-                });
-            base.MapServices(services);
+                .AddSignalR();
+            //.AddRedis(option =>
+            //{
+            //    option.ConnectionFactory = async writer =>
+            //    {
+            //        var config = "redis:default".Config<string>();
+            //        return await ConnectionMultiplexer.ConnectAsync(config, writer);
+            //    };
+            //});
+            base.ConfigureServices(services);
         }
 
         protected override void ConfigRoute(IEndpointRouteBuilder builder)
         {
-            builder.MapHub<ConfigHub>("/config_hub");
-            builder.MapHub<JobHub>("/job_hub");
+            //builder.MapHub<ConfigHub>("/config_hub");
+            //builder.MapHub<JobHub>("/job_hub");
+
             base.ConfigRoute(builder);
         }
 
@@ -60,20 +68,21 @@ namespace Spear.Sharp
             {
                 app.UseDeveloperExceptionPage();
             }
-            //app.UseHttpsRedirection();
-            //app.UseStaticFiles();
             app.UseFileServer(new FileServerOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
                 EnableDefaultFiles = true,
                 DefaultFilesOptions = { DefaultFileNames = new[] { "index.html" } }
             });
-            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(t => true).AllowCredentials());
+            //app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(t => true));
+
             var provider = app.ApplicationServices;
+
             provider.GetService<IHostApplicationLifetime>().ApplicationStopping.Register(async () =>
             {
                 await provider.GetService<ISchedulerContract>().Stop();
             });
+
             base.Configure(app, env);
         }
     }

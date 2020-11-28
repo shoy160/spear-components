@@ -1,7 +1,6 @@
-﻿using Acb.Core.Config;
-using Acb.Core.Extensions;
-using Acb.Core.Helper.Http;
-using Acb.Core.Logging;
+﻿using Spear.Core.Config;
+using Spear.Core.Extensions;
+using Spear.Core.Helper.Http;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
@@ -9,6 +8,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Dependency;
 
 namespace Spear.Sharp.Client
 {
@@ -28,7 +29,7 @@ namespace Spear.Sharp.Client
         public SpearClient(SpearOption option)
         {
             _option = option;
-            _logger = LogManager.Logger<SpearClient>();
+            _logger = CurrentIocManager.CreateLogger<SpearClient>();
             _headers = new Dictionary<string, string>();
         }
 
@@ -43,7 +44,7 @@ namespace Spear.Sharp.Client
             {
                 if (_headers.ContainsKey(AuthorizeKey))
                     return;
-                _logger.Info("正在加载配置中心令牌");
+                _logger.LogInformation("正在加载配置中心令牌");
                 try
                 {
                     var loginUrl = new Uri(new Uri(_option.Url), "api/account/login").AbsoluteUri;
@@ -63,12 +64,12 @@ namespace Spear.Sharp.Client
                     }
                     else
                     {
-                        _logger.Info(data);
+                        _logger.LogInformation(data);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"{_option.Url}:{ex.Message}", ex);
+                    _logger.LogError(ex, $"{_option.Url}:{ex.Message}");
                 }
             }
         }
@@ -105,7 +106,7 @@ namespace Spear.Sharp.Client
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"{_option.Url}:{ex.Message}", ex);
+                    _logger.LogError(ex, $"{_option.Url}:{ex.Message}");
                 }
             };
 
@@ -116,7 +117,7 @@ namespace Spear.Sharp.Client
                     _retryTimer.Dispose();
                     return;
                 }
-                _logger.Info("retry connect");
+                _logger.LogInformation("retry connect");
                 await Start();
             }, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
             return Task.CompletedTask;
@@ -126,11 +127,11 @@ namespace Spear.Sharp.Client
         {
             _configHub = Connect(SpearType.Config);
             var provider = new SpearConfigProvider();
-            ConfigHelper.Instance.Build(b => b.Add(provider));
+            ConfigHelper.Instance.Builder.Sources.Insert(0, provider);
             //订阅配置更新
             _configHub.On<IDictionary<string, object>>("UPDATE", configs =>
               {
-                  _logger.Info(configs);
+                  _logger.LogInformation(configs.ToJson());
                   foreach (var config in configs)
                   {
                       provider.LoadConfig(config.Key, config.Value);
@@ -139,7 +140,7 @@ namespace Spear.Sharp.Client
               });
             _configHub.Closed += async ex =>
             {
-                _logger.Info("connect closed");
+                _logger.LogInformation("connect closed");
                 await ConnectConfig(option);
             };
             await ConnectConfig(option);

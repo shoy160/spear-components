@@ -1,9 +1,10 @@
-﻿using Acb.Core.Dependency;
-using Acb.Core.Extensions;
+﻿using Spear.Core.Dependency;
+using Spear.Core.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Spear.Sharp.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Spear.Sharp.Hubs
 {
@@ -18,7 +19,7 @@ namespace Spear.Sharp.Hubs
         {
             if (string.IsNullOrWhiteSpace(Code))
                 return;
-            Logger.Info($"hub:{Context.ConnectionId} Subscript {env} - {string.Join(',', modules)}");
+            Logger.LogInformation($"hub:{Context.ConnectionId} Subscript {env} - {string.Join(',', modules)}");
             foreach (var mode in modules)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, $"{Code}_{mode}_{env}");
@@ -45,7 +46,7 @@ namespace Spear.Sharp.Hubs
         /// <returns></returns>
         public async Task UnSubscript(string[] modes, string env)
         {
-            Logger.Info($"hub:{Context.ConnectionId} UnSubscript {env} - {string.Join(',', modes)}");
+            Logger.LogInformation($"hub:{Context.ConnectionId} UnSubscript {env} - {string.Join(',', modes)}");
             if (string.IsNullOrWhiteSpace(Code))
                 return;
             foreach (var mode in modes)

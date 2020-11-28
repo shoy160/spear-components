@@ -1,19 +1,19 @@
-﻿using Acb.Core;
-using Acb.Core.Data;
-using Acb.Core.Domain;
-using Acb.Core.Exceptions;
-using Acb.Core.Extensions;
-using Acb.Core.Helper;
-using Acb.Core.Timing;
-using Acb.Dapper;
-using Acb.Dapper.Domain;
+﻿using Spear.Core;
+using Spear.Core.Data;
+using Spear.Core.Domain;
+using Spear.Core.Exceptions;
+using Spear.Core.Extensions;
+using Spear.Core.Helper;
+using Spear.Core.Timing;
+using Spear.Dapper;
+using Spear.Dapper.Domain;
 using Dapper;
 using Spear.Sharp.Business.Domain.Entities;
 using Spear.Sharp.Contracts.Enums;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Acb.Core.Dependency;
+using Spear.Core.Dependency;
 
 namespace Spear.Sharp.Business.Domain.Repositories
 {

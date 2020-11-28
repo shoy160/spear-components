@@ -1,4 +1,4 @@
-﻿using Acb.Core;
+﻿using Spear.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -64,7 +64,7 @@ namespace Spear.Sharp.Filters
             project = httpContext.GetProjectByToken();
             if (project == null)
             {
-                //Forbidden();
+                Forbidden();
                 return;
             }
             httpContext.SetProject(project);

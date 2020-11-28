@@ -1,5 +1,5 @@
-﻿using Acb.Core.Extensions;
-using Acb.Core.Helper.Http;
+﻿using Spear.Core.Extensions;
+using Spear.Core.Helper.Http;
 using Newtonsoft.Json;
 using Spear.Sharp.Contracts.Dtos.Job;
 using System;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Spear.Sharp.Business.Scheduler
 {
@@ -60,7 +61,7 @@ namespace Spear.Sharp.Business.Scheduler
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex.Message);
+                        Logger.LogWarning(ex.Message);
                     }
                 }
             }

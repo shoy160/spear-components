@@ -1,14 +1,15 @@
-﻿using Acb.Core;
-using Acb.Core.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
+using Spear.Core;
+using Spear.Core.Extensions;
 using Spear.Sharp.Contracts.Dtos;
 using Spear.Sharp.Domain;
 using Spear.Sharp.Filters;
-using System;
 
 namespace Spear.Sharp.Controllers
 {
+    [ApiController]
     [SpearAuthorize]
-    public class DController : Acb.WebApi.DController
+    public class DController : Spear.WebApi.DController
     {
         private SpearTicket _ticket;
 

@@ -1,4 +1,4 @@
-﻿using Acb.Core.Domain.Dtos;
+﻿using Spear.Core.Domain.Dtos;
 using System;
 
 namespace Spear.Sharp.Contracts.Dtos.Account
