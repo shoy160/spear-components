@@ -7,7 +7,7 @@ namespace Spear.Sharp
     {
         public static async Task Main(string[] args)
         {
-            Builder += UseIIS;
+            //Builder += UseIIS;
             await Start(args);
         }
     }

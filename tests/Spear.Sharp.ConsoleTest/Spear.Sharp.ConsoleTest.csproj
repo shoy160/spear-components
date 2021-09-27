@@ -12,7 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Spear.Framework" Version="0.2.6" />
+		<PackageReference Include="Spear.Framework" Version="0.3.1" />
 	</ItemGroup>
 
 	<ItemGroup>

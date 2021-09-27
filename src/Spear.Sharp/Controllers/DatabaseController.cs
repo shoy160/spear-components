@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DatabaseDto = Spear.Sharp.Contracts.Dtos.Database.DatabaseDto;
+using System.Linq;
 
 namespace Spear.Sharp.Controllers
 {
@@ -81,7 +82,7 @@ namespace Spear.Sharp.Controllers
                 ViewBag.DbName = dto.DbName;
                 ViewBag.Provider = dto.Provider;
                 ViewBag.Name = dto.Name;
-                return View(dto.Tables);
+                return View(dto.Tables.ToList());
             }
             catch (Exception ex)
             {

@@ -22,7 +22,7 @@
           <el-option
             :key="1"
             :value="1"
-            label="Corn"
+            label="Cron"
           />
           <el-option
             :key="2"
@@ -47,20 +47,20 @@
       </el-form-item>
       <el-form-item
         v-if="model.type === 1"
-        :rules="{required:true,message:'请输入Corn表达式',trigger:'blur'}"
-        label="Corn表达式"
-        prop="corn"
+        :rules="{required:true,message:'请输入Cron表达式',trigger:'blur'}"
+        label="Cron表达式"
+        prop="cron"
       >
         <el-input
-          v-model="model.corn"
-          placeholder="请输入Corn表达式"
+          v-model="model.cron"
+          placeholder="请输入Cron表达式"
           style="width:220px;"
         />
         <a
           href="http://www.bejson.com/othertools/cron/"
           target="_blank"
           class="link-type"
-        >Corn表达式生成</a>
+        >Cron表达式生成</a>
       </el-form-item>
       <template v-if="model.type === 2">
         <el-form-item

@@ -101,7 +101,7 @@ namespace Spear.Sharp.Business.Scheduler
             {
                 case TriggerType.Cron:
                     //当设置了start或者end时，启动调度时会自动执行，添加WithMisfireHandlingInstructionDoNothing阻止
-                    triggerBuilder.WithCronSchedule(trigger.Corn, b => b.WithMisfireHandlingInstructionDoNothing());
+                    triggerBuilder.WithCronSchedule(trigger.Cron, b => b.WithMisfireHandlingInstructionDoNothing());
                     break;
                 case TriggerType.Simple:
                     if (trigger.Times == 0)

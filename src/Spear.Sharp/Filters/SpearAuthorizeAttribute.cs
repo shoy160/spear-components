@@ -37,7 +37,7 @@ namespace Spear.Sharp.Filters
             }
 
             var httpContext = context.HttpContext;
-            //方式一 参数/header
+            //方式一 参数/header project
             var project = httpContext.GetProjectByCode();
             if (project != null)
             {
@@ -60,7 +60,7 @@ namespace Spear.Sharp.Filters
                 }
             }
 
-            //方式二 Header
+            //方式二 Header Authorization
             project = httpContext.GetProjectByToken();
             if (project == null)
             {

@@ -10,7 +10,7 @@ using Spear.Sharp.Business.Domain.Repositories;
 using Spear.Sharp.Contracts;
 using Spear.Sharp.Contracts.Dtos.Database;
 using Spear.Sharp.Contracts.Enums;
-using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Spear.Sharp.Business
@@ -18,10 +18,34 @@ namespace Spear.Sharp.Business
     public class DatabaseService : IDatabaseContract
     {
         private readonly DataBaseRepository _repository;
+        private const string PLACE_PASSWORD = "(password)=xxx;";
 
         public DatabaseService(DataBaseRepository repository)
         {
             _repository = repository;
+        }
+
+        /// <summary> 数据库密码脱敏 </summary>
+        /// <param name="dto"></param>
+        private void HidePassword(DatabaseDto dto)
+        {
+            if (dto == null || dto.ConnectionString.IsNullOrEmpty())
+                return;
+            dto.ConnectionString = dto.ConnectionString.Replace("(password)=[^;]+;", "$1=xxx;", RegexOptions.IgnoreCase);
+        }
+
+        /// <summary> 数据库密码还原 </summary>
+        /// <param name="model"></param>
+        /// <param name="connectionString"></param>
+        /// <returns></returns>
+        private string RestorePassword(TDatabase model, string connectionString)
+        {
+            if (connectionString.IsMatch(PLACE_PASSWORD, RegexOptions.IgnoreCase))
+            {
+                var password = model.ConnectionString.Match("password=([^;]+);", 1, RegexOptions.IgnoreCase);
+                return connectionString.Replace(PLACE_PASSWORD, $"$1={password};", RegexOptions.IgnoreCase);
+            }
+            return connectionString;
         }
 
         public async Task<int> AddAsync(string accountId, string name, string code, ProviderType provider, string connectionString)
@@ -65,11 +89,20 @@ namespace Spear.Sharp.Business
         public async Task<PagedList<DatabaseDto>> PagedListAsync(string accountId, string keyword = null,
             ProviderType? type = null, int page = 1, int size = 10)
         {
-            return await _repository.PagedListAsync(accountId, keyword, type, page, size);
+            var paged = await _repository.PagedListAsync(accountId, keyword, type, page, size);
+            if (!paged.List.IsNullOrEmpty())
+            {
+                paged.List.Foreach(t => HidePassword(t));
+            }
+            return paged;
         }
 
         public async Task<int> SetAsync(string id, string name, string code, ProviderType type, string connectionString)
         {
+            var model = await _repository.QueryByIdAsync(id);
+            if (model == null)
+                throw new BusiException("数据库连接不存在");
+            connectionString = RestorePassword(model, connectionString);
             return await _repository.UpdateAsync(id, name, code, type, connectionString);
         }
 
@@ -78,9 +111,9 @@ namespace Spear.Sharp.Business
             return await _repository.UpdateStatusAsync(id, CommonStatus.Delete);
         }
 
-        public string ConvertToLanguageType(string dbType, ProviderType provider, LanguageType language, bool isNullable = false)
+        public string ConvertToLanguageType(ColumnDto column, ProviderType provider, LanguageType language)
         {
-            return DbTypeConverter.Instance.Convert(provider, language, dbType, isNullable);
+            return DbTypeConverter.Instance.Convert(provider, language, column);
         }
 
         public string ConvertToDbType(string languageType, ProviderType provider, LanguageType language)

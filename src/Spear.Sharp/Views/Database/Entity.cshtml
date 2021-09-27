@@ -18,14 +18,14 @@
             <div class="row" style="margin: 0 0 15px 0">
                 <div class="col-sm-offset-6 col-sm-3">
                     <select class="form-control b-language">
-                        <option selected="selected" value="csharp">C#</option>
-                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                        <option selected="selected" value="java">Java</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
                     <select class="form-control b-naming">
-                        <option value="none">None</option>
-                        <option value="naming" selected="selected">Naming</option>
+                        <option selected="selected" value="none">None</option>
+                        <option value="naming">Naming</option>
                         <option value="table">Table</option>
                     </select>
                 </div>
@@ -34,7 +34,7 @@
                 <button class="btn btn-primary b-copy">Copy</button>
                 <pre><code class="cs">@Model.EntityCode(provider, LanguageType.CSharp, NamingType.None)</code></pre>
             </div>
-            <div class="code d-naming">
+            <div class="code d-naming hide">
                 <button class="btn btn-primary b-copy">Copy</button>
                 <pre><code class="cs">@Model.EntityCode(provider, LanguageType.CSharp)</code></pre>
             </div>
@@ -42,7 +42,7 @@
                 <button class="btn btn-primary b-copy">Copy</button>
                 <pre><code class="cs">@Model.EntityCode(provider, LanguageType.CSharp, NamingType.Table)</code></pre>
             </div>
-            <div class="code d-none-java hide">
+            <div class="code d-none-java">
                 <button class="btn btn-primary b-copy">Copy</button>
                 <pre><code class="cs">@Model.EntityCode(provider, LanguageType.Java, NamingType.None)</code></pre>
             </div>

@@ -21,9 +21,9 @@
           {{ scope.row.expired | parseTime() }}
         </template>
       </el-table-column>
-      <el-table-column label="Corn表达式" prop="corn">
+      <el-table-column label="Cron表达式" prop="cron">
         <template slot-scope="scope">
-          {{ scope.row.type === 2 ? '--' : scope.row.corn }}
+          {{ scope.row.type === 2 ? '--' : scope.row.cron }}
         </template>
       </el-table-column>
       <el-table-column label="间隔(秒)" prop="interval">

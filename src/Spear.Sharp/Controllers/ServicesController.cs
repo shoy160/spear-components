@@ -29,6 +29,8 @@ namespace Spear.Sharp.Controllers
         {
             var url = "services:url".Config<string>();
             var token = "services:token".Config<string>();
+            if (url.IsNullOrEmpty())
+                throw new BusiException("Consul服务未配置");
             var uri = new Uri(new Uri(url), api);
             if (!string.IsNullOrWhiteSpace(token))
                 uri = new Uri(uri, $"?token={token}");

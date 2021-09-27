@@ -340,16 +340,17 @@
   <Database DbProvider="MySql"  Language="Java">
     <DbType Name="text" To="String"/>
     <DbType Name="varchar" To="String"/>
+    <DbType Name="json" To="String"/>
     <DbType Name="date" To="Date"/>
     <DbType Name="datetime" To="Date" />
     <DbType Name="time" To="Time"/>
-    <DbType Name="tinyint" To="int" ToNull="Integer"/>
+    <DbType Name="tinyint" To="byte" ToNull="Byte"/>
     <DbType Name="smallint" To="int" ToNull="Integer"/>
     <DbType Name="int" To="int" ToNull="Integer"/>
-    <DbType Name="bigint" To="BigInteger"/>
+    <DbType Name="bigint" To="long" ToNull="Long" />
     <DbType Name="bit" To="boolean" ToNull="Boolean" />
     <DbType Name="char" To="String" />
-    <DbType Name="integer" To="long" ToNull="Long" />
+    <DbType Name="integer" To="int" ToNull="Integer" />
     <DbType Name="decimal" To="BigDecimal" />
     <DbType Name="float" To="float" ToNull="Float" />
     <DbType Name="timestamp" To="Date" />

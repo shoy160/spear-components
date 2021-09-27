@@ -38,7 +38,7 @@ namespace Spear.Sharp.Domain
         /// <param name="context"></param>
         /// <param name="scheme"></param>
         /// <returns></returns>
-        public static SpearTicket GetTicket(this HttpContext context, string scheme = "acb")
+        public static SpearTicket GetTicket(this HttpContext context, string scheme = "spear")
         {
             try
             {

@@ -30,8 +30,20 @@ namespace Spear.Sharp.Domain
 
         public static string JavaEntityCode(this TableDto table, ProviderType provider, NamingType type = NamingType.Naming)
         {
-            var primary = table.PrimaryColumn;
             var sb = new StringBuilder();
+            sb.AppendLine("import com.baomidou.mybatisplus.annotation.TableField;");
+            sb.AppendLine("import com.baomidou.mybatisplus.annotation.TableId;");
+            sb.AppendLine("import com.baomidou.mybatisplus.annotation.TableName;");
+            if (table.HasAuditColumn)
+            {
+                sb.AppendLine("import club.raveland.data.domain.po.BaseAuditPO;");
+            }
+            sb.AppendLine("import lombok.Getter;");
+            sb.AppendLine("import lombok.Setter;");
+
+            sb.AppendLine();
+            sb.AppendLine();
+
             sb.AppendLine("/**");
             sb.AppendLine($" * {table.Desc()}");
             sb.AppendLine(" *");
@@ -47,18 +59,41 @@ namespace Spear.Sharp.Domain
             {
                 clsName = table.GetConvertedName(start: 1);
             }
-            sb.AppendLine(
-                $"public class {clsName}PO implements Serializable {{");
+            if (table.HasAuditColumn)
+            {
+                sb.AppendLine(
+                    $"public class {clsName}PO extends BaseAuditPO {{");
+            }
+            else
+            {
+                sb.AppendLine(
+                    $"public class {clsName}PO implements Serializable {{");
+            }
             sb.AppendLine("\tprivate static final long serialVersionUID = 1L;");
             var index = 0;
             foreach (var column in table.Columns)
             {
+                if (table.HasAuditColumn && table.IsAuditColumn(column))
+                {
+                    continue;
+                }
                 sb.AppendLine("\t/**");
                 sb.AppendLine($"\t * {column.Desc()}");
+                if (column.DefaultValue != null)
+                {
+                    sb.AppendLine($"\t * 默认值：{(string.IsNullOrWhiteSpace(column.DefaultValue) ? "空字符" : column.DefaultValue)}");
+                }
                 sb.AppendLine("\t */");
                 if (column.IsPrimaryKey)
                 {
-                    sb.AppendLine($"\t@TableId(value = \"{column.Name}\", type = IdType.AUTO)");
+                    if (column.AutoIncrement)
+                    {
+                        sb.AppendLine($"\t@TableId(value = \"{column.Name}\", type = IdType.AUTO)");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"\t@TableId(value = \"{column.Name}\")");
+                    }
                 }
                 else
                 {

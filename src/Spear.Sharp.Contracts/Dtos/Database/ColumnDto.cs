@@ -20,6 +20,9 @@ namespace Spear.Sharp.Contracts.Dtos.Database
         /// <summary> 是否可为空 </summary>
         public bool IsNullable { get; set; }
 
+        /// <summary> 默认值 </summary>
+        public string DefaultValue { get; set; }
+
         /// <summary> 描述 </summary>
         public override string Description { get; set; }
 
@@ -31,7 +34,7 @@ namespace Spear.Sharp.Contracts.Dtos.Database
         public string LanguageType(ProviderType type, LanguageType language)
         {
             return CurrentIocManager.Resolve<IDatabaseContract>()
-                .ConvertToLanguageType(DbType, type, language, IsNullable);
+                .ConvertToLanguageType(this, type, language);
         }
     }
 }

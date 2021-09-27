@@ -16,6 +16,7 @@ using Spear.Core.Data;
 using Spear.Dapper.Mysql;
 using Spear.Dapper.PostgreSql;
 using Spear.Dapper.SQLite;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Spear.Sharp
 {
@@ -27,7 +28,7 @@ namespace Spear.Sharp
 
         protected override void UseServices(IServiceProvider provider)
         {
-            //Task.Run(async () => { await provider.GetService<ISchedulerContract>().Start(); });
+            Task.Run(async () => { await provider.GetService<ISchedulerContract>().Start(); });
             base.UseServices(provider);
         }
 
@@ -40,6 +41,7 @@ namespace Spear.Sharp
             //services.AddRazorPages();
             services
                 .AddSignalR();
+            services.AddMvc();
             //.AddRedis(option =>
             //{
             //    option.ConnectionFactory = async writer =>
@@ -53,8 +55,8 @@ namespace Spear.Sharp
 
         protected override void ConfigRoute(IEndpointRouteBuilder builder)
         {
-            //builder.MapHub<ConfigHub>("/config_hub");
-            //builder.MapHub<JobHub>("/job_hub");
+            builder.MapHub<ConfigHub>("/config_hub");
+            builder.MapHub<JobHub>("/job_hub");
 
             base.ConfigRoute(builder);
         }
@@ -74,7 +76,7 @@ namespace Spear.Sharp
                 EnableDefaultFiles = true,
                 DefaultFilesOptions = { DefaultFileNames = new[] { "index.html" } }
             });
-            //app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(t => true));
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(t => true));
 
             var provider = app.ApplicationServices;
 

@@ -29,5 +29,11 @@ namespace Spear.Sharp.Contracts.Dtos.Database
         public override string Description { get; set; }
 
         public IEnumerable<ColumnDto> Columns { get; set; }
+
+        private readonly static string[] AuditColumns = new[] { "create_time", "update_time", "is_del" };
+
+        public bool IsAuditColumn(ColumnDto column) => AuditColumns.Contains(column.Name);
+
+        public bool HasAuditColumn => AuditColumns.All(c => Columns.Any(t => t.Name == c));
     }
 }

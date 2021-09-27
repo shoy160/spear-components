@@ -54,8 +54,7 @@ namespace Spear.Sharp.Contracts
         /// <param name="language"></param>
         /// <param name="isNullable"></param>
         /// <returns></returns>
-        string ConvertToLanguageType(string dbType, ProviderType provider, LanguageType language,
-            bool isNullable = false);
+        string ConvertToLanguageType(ColumnDto column, ProviderType provider, LanguageType language);
 
         /// <summary> 转换数据类型 </summary>
         /// <param name="languageType"></param>

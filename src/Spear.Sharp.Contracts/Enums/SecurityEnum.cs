@@ -7,9 +7,9 @@ namespace Spear.Sharp.Contracts.Enums
     {
         /// <summary> 匿名 </summary>
         None = 0,
-        /// <summary> 获取时验证 </summary>
-        Get = 1,
-        /// <summary> 管理时验证 </summary>
-        Manage = 2
+        /// <summary> 管理需要验证 </summary>
+        Manage = 1,
+        /// <summary> 获取需要验证 </summary>
+        Get = 2
     }
 }

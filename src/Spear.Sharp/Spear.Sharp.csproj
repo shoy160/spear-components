@@ -42,7 +42,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Redis" Version="1.1.5" />
-    <PackageReference Include="Spear.WebApi" Version="0.2.7" />
+    <PackageReference Include="Spear.WebApi" Version="0.3.1" />
   </ItemGroup>
 
   <ItemGroup>

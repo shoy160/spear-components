@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Dependency;
 using Spear.Core.Helper;
+using Spear.Sharp.Contracts.Dtos.Database;
 using Spear.Sharp.Contracts.Enums;
 
 namespace Spear.Sharp.Business.Database
@@ -28,12 +29,12 @@ namespace Spear.Sharp.Business.Database
         /// <param name="dbType">数据库类型</param>
         /// <param name="isNullable">是否可为空</param>
         /// <returns></returns>
-        public string Convert(ProviderType dbProvider, LanguageType lang, string dbType, bool isNullable = false)
+        public string Convert(ProviderType dbProvider, LanguageType lang, ColumnDto column)
         {
             var dbTypeMap = new DbTypeMapLange
             {
-                Name = dbType,
-                To = dbType
+                Name = column.DbType,
+                To = column.DbType
             };
 
             var databaseMap = _typeMap.Databases.FirstOrDefault(m => m.DbProvider == dbProvider && m.Language == lang);
@@ -43,11 +44,11 @@ namespace Spear.Sharp.Business.Database
             }
             else
             {
-                var map = databaseMap.DbTypes?.FirstOrDefault(m => m.Name == dbType);
+                var map = databaseMap.DbTypes?.FirstOrDefault(m => m.Name == column.DbType);
 
                 if (map == null)
                 {
-                    _logger.LogWarning($"没有找到语言对应的数据类型:{dbProvider}->{lang},{dbType}");
+                    _logger.LogWarning($"没有找到语言对应的数据类型:{dbProvider}->{lang},{column.DbType}");
                 }
                 else
                 {
@@ -57,11 +58,15 @@ namespace Spear.Sharp.Business.Database
 
             if (lang == LanguageType.CSharp)
             {
-                return dbTypeMap.To != "string" && isNullable ? $"{dbTypeMap.To}?" : dbTypeMap.To;
+                return dbTypeMap.To != "string" && column.IsNullable ? $"{dbTypeMap.To}?" : dbTypeMap.To;
             }
             if (lang == LanguageType.Java)
             {
-                if (isNullable && !string.IsNullOrWhiteSpace(dbTypeMap.ToNull))
+                if (column.Name.StartsWith("is") && column.DbType == "tinyint")
+                {
+                    return column.IsNullable ? "Boolean" : "boolean";
+                }
+                if (column.IsNullable && !string.IsNullOrWhiteSpace(dbTypeMap.ToNull))
                 {
                     return dbTypeMap.ToNull;
                 }

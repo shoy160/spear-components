@@ -11,8 +11,8 @@ namespace Spear.Sharp.ViewModels.Jobs
         public TriggerType Type { get; set; }
         /// <summary> 类型描述 </summary>
         public string TypeCn => Type.GetText();
-        /// <summary> Corn表达式 </summary>
-        public string Corn { get; set; }
+        /// <summary> Cron表达式 </summary>
+        public string Cron { get; set; }
         /// <summary> 执行次数 </summary>
         public int Times { get; set; }
         /// <summary> 时间间隔(秒) </summary>

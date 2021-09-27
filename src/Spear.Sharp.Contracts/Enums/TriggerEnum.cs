@@ -6,7 +6,7 @@ namespace Spear.Sharp.Contracts.Enums
     {
         /// <summary> 无 </summary>
         None = 0,
-        /// <summary> Corn表达式 </summary>
+        /// <summary> Cron表达式 </summary>
         Cron = 1,
         /// <summary> 简单 </summary>
         Simple = 2

@@ -41,7 +41,7 @@ namespace Spear.Sharp.Business.Domain.Repositories
                 new[]
                 {
                     nameof(TJobTrigger.Type), nameof(TJobTrigger.Start), nameof(TJobTrigger.Expired),
-                    nameof(TJobTrigger.Corn), nameof(TJobTrigger.Times), nameof(TJobTrigger.Interval)
+                    nameof(TJobTrigger.Cron), nameof(TJobTrigger.Times), nameof(TJobTrigger.Interval)
                 }, Trans);
         }
 
