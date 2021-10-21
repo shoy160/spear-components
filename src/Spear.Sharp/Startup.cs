@@ -1,22 +1,21 @@
-﻿using Spear.Core.Extensions;
-using Spear.WebApi;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Spear.Sharp.Contracts;
-using Spear.Sharp.Hubs;
-using StackExchange.Redis;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Spear.Core.Data;
+using Spear.Core.Extensions;
+using Spear.Dapper.Adapters;
 using Spear.Dapper.Mysql;
 using Spear.Dapper.PostgreSql;
 using Spear.Dapper.SQLite;
-using Microsoft.AspNetCore.Mvc;
+using Spear.Sharp.Contracts;
+using Spear.Sharp.Hubs;
+using Spear.WebApi;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Spear.Sharp
 {
@@ -34,6 +33,7 @@ namespace Spear.Sharp
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            DbConnectionManager.AddAdapter(new SqlServerAdapter());
             DbConnectionManager.AddAdapter(new MySqlConnectionAdapter());
             DbConnectionManager.AddAdapter(new PostgreSqlAdapter());
             DbConnectionManager.AddAdapter(new SqliteConnectionAdapter());
