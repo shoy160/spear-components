@@ -54,11 +54,7 @@ namespace Spear.Sharp.Domain
             sb.AppendLine("@Getter");
             sb.AppendLine("@Setter");
             sb.AppendLine($"@TableName(\"{table.Name}\")");
-            var clsName = table.GetConvertedName();
-            if (type == NamingType.Naming)
-            {
-                clsName = table.GetConvertedName(start: 1);
-            }
+            var clsName = table.GetConvertedName(trimPrefix: type != NamingType.None);
             if (table.HasAuditColumn)
             {
                 sb.AppendLine(
@@ -99,11 +95,7 @@ namespace Spear.Sharp.Domain
                 {
                     sb.AppendLine($"\t@TableField(\"{column.Name}\")");
                 }
-                var field = column.GetConvertedName(Spear.Core.Serialize.NamingType.CamelCase);
-                if (type == NamingType.Naming)
-                {
-                    field = column.GetConvertedName(Spear.Core.Serialize.NamingType.CamelCase, 1);
-                }
+                var field = column.GetConvertedName(Core.Serialize.NamingType.CamelCase, trimPrefix: type != NamingType.None);
                 sb.AppendLine($"\tprivate {column.LanguageType(provider, LanguageType.Java)} {field};");
 
                 if (index < table.Columns.Count() - 1)
@@ -139,9 +131,10 @@ namespace Spear.Sharp.Domain
                 {
                     sb.AppendLine($"\t[{(type == NamingType.Naming ? "Naming" : "Column")}(\"{column.Name}\")]");
                 }
+                var field = column.GetConvertedName(trimPrefix: type != NamingType.None);
 
                 sb.AppendLine(
-                    $"\tpublic {(column.IsPrimaryKey ? "override " : "")}{column.LanguageType(provider, LanguageType.CSharp)} {column.GetConvertedName(start: 1)} {{ get; set; }}");
+                    $"\tpublic {(column.IsPrimaryKey ? "override " : "")}{column.LanguageType(provider, LanguageType.CSharp)} {field} {{ get; set; }}");
                 if (index < table.Columns.Count() - 1)
                     sb.AppendLine(string.Empty);
                 index++;

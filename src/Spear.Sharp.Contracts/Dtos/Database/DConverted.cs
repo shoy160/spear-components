@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using Spear.Core.Domain.Dtos;
+using Spear.Core.Extensions;
 using Spear.Core.Serialize;
 
 namespace Spear.Sharp.Contracts.Dtos.Database
@@ -16,27 +18,23 @@ namespace Spear.Sharp.Contracts.Dtos.Database
             }
         }
 
-        public virtual string GetConvertedName(NamingType type = NamingType.Normal, int start = 0)
+        public virtual string GetConvertedName(NamingType type = NamingType.Normal, bool trimPrefix = true)
         {
-            var arr = Name.Split('_');
-            var sb = new StringBuilder();
-            var index = start > 0 ? start : 0;
-            for (var i = index; i < arr.Length; i++)
+            var array = Name.Split('_', '-');
+            if (array.Length > 1 && trimPrefix && array[0].In("t", "fd"))
+                array = array.Skip(1).Select(t => t.Substring(0, 1).ToUpper() + t.Substring(1)).ToArray();
+            else
+                array = array.Select(t => t.Substring(0, 1).ToUpper() + t.Substring(1)).ToArray();
+            string name = string.Join(string.Empty, array);
+            switch (type)
             {
-                var name = arr[i];
-                if (string.IsNullOrWhiteSpace(name)) continue;
-                if (type == NamingType.Normal || i > index)
-                {
-                    sb.Append(name.Substring(0, 1).ToUpper());
-                    if (name.Length > 1)
-                        sb.Append(name.Substring(1));
-                }
-                else
-                {
-                    sb.Append(name);
-                }
+                case NamingType.CamelCase:
+                    return name.ToCamelCase();
+                case NamingType.UrlCase:
+                    return name.ToUrlCase();
+                default:
+                    return name;
             }
-            return sb.ToString();
         }
 
         /// <summary> 描述 </summary>
