@@ -3399,9 +3399,9 @@ html-minifier@^3.2.3:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
-html-webpack-plugin@^4.0.0-alpha:
+html-webpack-plugin@4.0.0-alpha:
   version "4.0.0-alpha"
-  resolved "http://registry.npm.taobao.org/html-webpack-plugin/download/html-webpack-plugin-4.0.0-alpha.tgz#b2c7b6d4885a209c999dfce3ffb9866e2c8c0eaa"
+  resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-4.0.0-alpha.tgz#b2c7b6d4885a209c999dfce3ffb9866e2c8c0eaa"
   dependencies:
     "@types/tapable" "1.0.2"
     html-minifier "^3.2.3"
@@ -6349,9 +6349,9 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/shebang-regex/download/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
-shelljs@0.8.2:
-  version "0.8.2"
-  resolved "http://registry.npm.taobao.org/shelljs/download/shelljs-0.8.2.tgz#345b7df7763f4c2340d584abb532c5f752ca9e35"
+shelljs@0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.5.tgz#de055408d8361bed66c669d2f000538ced8ee20c"
   dependencies:
     glob "^7.0.0"
     interpret "^1.0.0"
