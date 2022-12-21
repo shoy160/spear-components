@@ -160,7 +160,7 @@ CREATE TABLE `t_job_trigger`  (
   `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `job_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '任务Id',
   `type` tinyint(4) NOT NULL COMMENT '触发器类型',
-  `corn` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'Corn表达式',
+  `cron` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'Corn表达式',
   `times` int(11) NULL DEFAULT NULL COMMENT '执行次数',
   `interval` int(255) NULL DEFAULT NULL COMMENT '执行间隔(秒)',
   `start` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
